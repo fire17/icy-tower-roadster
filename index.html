@@ -29,7 +29,7 @@
 <meta name="twitter:image" content="https://icytower.akeyo.io/assets/img/og.png">
 <link rel="preload" href="assets/fonts/cousine-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/cousine-700-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/site.css?v=19">
+<link rel="stylesheet" href="assets/css/site.css?v=23">
 <script>
   /* Theme + language before first paint, so nothing flashes. */
   (function () {
@@ -102,7 +102,7 @@
         <span class="title__edition" aria-hidden="true"><span class="ed is-on" data-ed="harold" data-i18n="ed.harold">CLASSIC EDITION</span><span class="ed" data-ed="dave" data-i18n="ed.dave">DISCO DAVE EDITION</span><span class="ed" data-ed="roadster" data-i18n="ed.roadster">ROADSTER EDITION</span><span class="ed" data-ed="template" data-i18n="ed.template">TEMPLATE EDITION</span></span>
       </h1>
       <div class="edition">
-        <div class="edition__portrait" aria-hidden="true">
+        <div class="edition__portrait" role="button" tabindex="0" aria-label="Next climber" data-i18n-aria="shaft.next">
           <span class="edition__wall"></span>
           <span class="portrait is-on" data-ed="harold"></span>
           <span class="portrait" data-ed="dave"></span>
@@ -183,6 +183,7 @@
         <button type="button" class="shaft__btn" id="next" aria-label="Next climber" data-i18n-aria="shaft.next">&#9654;</button>
         <span class="shaft__meter" aria-hidden="true"><i></i></span>
       </div>
+      <p class="shaft__hint" aria-hidden="true"><span class="hint--keys" data-i18n="hint.keys">&larr; &rarr; / C switch &middot; M mute</span><span class="hint--touch" data-i18n="hint.touch">swipe to switch climbers</span></p>
       <button type="button" class="shaft__sound" id="sound" data-i18n="sound">[ &#9654; WATCH WITH SOUND ]</button>
     </figure>
   </section>
@@ -396,12 +397,17 @@
   <p class="foot__end">- The End -</p>
 </footer>
 
+<div class="vol" role="group" aria-label="Sound" data-i18n-aria="vol.aria">
+  <button type="button" class="vol__btn" id="vol-mute" aria-pressed="false" aria-label="Mute sound"><span class="vol__on" aria-hidden="true">&#9834;</span><span class="vol__off" aria-hidden="true">&times;</span></button>
+  <input type="range" class="vol__slider" id="vol-slider" min="0" max="100" step="5" value="60" aria-label="Volume" data-i18n-aria="vol.slider">
+</div>
+
 <div class="climb" aria-hidden="true">
   <div class="climb__track"></div>
   <div class="climb__car"><span class="climb__sprite"></span></div>
   <div class="climb__floor"><span class="climb__label">FLOOR</span> <span class="climb__num">000</span></div>
 </div>
 
-<script src="assets/js/site.js?v=19" defer></script>
+<script src="assets/js/site.js?v=23" defer></script>
 </body>
 </html>

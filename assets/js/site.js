@@ -110,6 +110,8 @@
     'pitch.dave': 'דיסקו דייב עולה לרחבה: אפרו, חליפה ורודה, מכנסיים לבנים מתרחבים. אותו מגדל ואותה פיזיקה, עם יותר סטייל בכל קפיצה.',
     'pitch.roadster': 'למגדל של הרולד יש מטפס חדש: הטסלה רודסטר של 2026. הוא עושה סלטות אחוריות במעלה הקומות על מדחפי גז קר, שיורים בדיוק מהמקומות שבהם נמצאות הפיות של המכונית האמיתית.',
     'pitch.template': 'קווי המתאר הריקים שהמשחק המקורי צירף, כדי שכל אחד יוכל לצייר מטפס משלו. הביאו את הפיקסלים שלכם.',
+    'hint.keys': '<bdi dir="ltr">← → / C</bdi> להחלפה · <bdi>M</bdi> להשתקה', 'hint.touch': 'החליקו כדי להחליף מטפס',
+    'vol.aria': 'סאונד', 'vol.slider': 'עוצמת קול',
     'foot.releases': 'גרסאות', 'foot.top': 'חזרה לקומה 0'
   };
   var EN = {};
@@ -138,6 +140,7 @@
     document.title = he ? 'אייסי טאוור: מהדורת רודסטר' : 'Icy Tower: Roadster Edition';
     labelTable();
     placePointer();
+    if (typeof volUI === 'function') volUI();
   }
   function currentLang() { return d.getAttribute('lang') === 'he' ? 'he' : 'en'; }
 
@@ -192,6 +195,87 @@
     });
   });
 
+  /* ---------------- sound: the original menu music + each climber's own sounds ----------------
+     Opt-in: nothing plays before the first key or tap (the PRESS START press is the natural unlock).
+     Files are the game's own, shared with /play/ (play/audio, ogg or m4a). Volume + mute persist. */
+  var AUD = 'play/audio/', ac = null, master = null, musicGain = null, musicOn = false, bufs = {};
+  var vol = 0.6, muted = false;
+  try { var sv = localStorage.getItem('it-vol'); if (sv !== null && !isNaN(+sv)) vol = Math.max(0, Math.min(1, +sv)); muted = localStorage.getItem('it-mute') === '1'; } catch (e) {}
+  var EXT = (function () { var a = document.createElement('audio'); return a.canPlayType && a.canPlayType('audio/ogg; codecs="vorbis"') ? '.ogg' : '.m4a'; })();
+  var alog = /[?&]audiolog\b/.test(location.search) ? (window.itAudioLog = []) : null;
+  function logA(m) { if (alog) { alog.push(m); console.info('[audio] ' + m); } }
+  var SETS = {   /* character sound slots 116-122 (116-118 = the jumps); the Template has none, so it uses the default set */
+    harold: ['h116', 'h117', 'h118', 'h119', 'h120', 'h121', 'h122'],
+    dave: ['d116', 'd117', 'd118', 'd119', 'd120', 'd121', 'd122'],
+    roadster: ['r116', 'r117', 'r118']
+  };
+  SETS.template = SETS.harold;
+  function level() { return muted ? 0 : vol; }
+  function load(key) {
+    if (!bufs[key]) bufs[key] = fetch(AUD + key + EXT).then(function (r) { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
+      .then(function (b) { return new Promise(function (res, rej) { ac.decodeAudioData(b, res, rej); }); });
+    return bufs[key];
+  }
+  function unlock() {
+    if (ac) return;
+    var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+    ac = new AC(); master = ac.createGain(); master.gain.value = level(); master.connect(ac.destination);
+    musicGain = ac.createGain(); musicGain.gain.value = 0.55; musicGain.connect(master);
+    if (ac.resume) ac.resume();
+    logA('unlocked ' + ac.state);
+    if (!muted) startMusic();
+  }
+  function startMusic() {
+    if (!ac || musicOn) return; musicOn = true;
+    load('s3').then(function (buf) {     /* S_BG_MENU: the original menu loop, sample 3 of sfx13 */
+      var src = ac.createBufferSource(); src.buffer = buf; src.loop = true;
+      src.loopStart = 0; src.loopEnd = Math.min(buf.duration, 1006414 / 44100);   /* the original's exact frame count */
+      src.connect(musicGain); src.start();
+      logA('music s3' + EXT + ' loop=' + src.loop + ' end=' + src.loopEnd.toFixed(3) + 's state=' + ac.state);
+    }).catch(function (e) { musicOn = false; logA('music failed ' + e); });
+  }
+  function playSfx(key, g) {
+    if (!ac || muted || !vol) return;
+    load(key).then(function (buf) {
+      var src = ac.createBufferSource(), gn = ac.createGain(); gn.gain.value = g == null ? 1 : g;
+      src.buffer = buf; src.connect(gn); gn.connect(master); src.start();
+      logA('sfx ' + key + EXT);
+    }).catch(function (e) { logA('sfx failed ' + key + ' ' + e); });
+  }
+  function charSound(id, user) {
+    var set = SETS[id] || SETS.harold;
+    if (user) { playSfx('s11', .8); playSfx(set[Math.floor(Math.random() * set.length)], 1); }   /* S_MENU_CHANGE + one of theirs */
+    else playSfx(set[Math.floor(Math.random() * Math.min(3, set.length))], .55);                /* auto-rotate: a soft jump */
+  }
+  var volBox = document.querySelector('.vol'), volBtn = document.getElementById('vol-mute'), volSl = document.getElementById('vol-slider');
+  function volUI() {
+    if (!volBox) return;
+    volBox.classList.toggle('is-muted', muted || !vol);
+    volBtn.setAttribute('aria-pressed', muted ? 'true' : 'false');
+    var he = d.getAttribute('lang') === 'he';
+    volBtn.setAttribute('aria-label', muted ? (he ? 'השמע סאונד' : 'Unmute sound') : (he ? 'השתק סאונד' : 'Mute sound'));
+    volSl.value = Math.round(vol * 100);
+  }
+  function applyLevel() {
+    try { localStorage.setItem('it-vol', String(vol)); localStorage.setItem('it-mute', muted ? '1' : '0'); } catch (e) {}
+    if (master) master.gain.setTargetAtTime(level(), ac.currentTime, 0.04);
+    if (ac && !muted && vol) startMusic();
+    volUI();
+  }
+  function setMuted(m) { muted = m; logA(m ? 'muted' : 'unmuted'); applyLevel(); }
+  if (volBox) {
+    volBtn.addEventListener('click', function () { unlock(); setMuted(!muted); });
+    volSl.addEventListener('input', function () { unlock(); vol = (+volSl.value) / 100; if (vol && muted) muted = false; applyLevel(); });
+    volUI();
+  }
+  /* the first key or tap anywhere (the PRESS START press, normally) unlocks audio */
+  function gesture(e) {   /* modifier keys are not a user activation, so they never unlock */
+    if (e.type === 'keydown' && /^(Shift|Control|Alt|Meta|CapsLock|Tab)$/.test(e.key)) return;
+    if (!ac) unlock();
+    else if (ac.state === 'suspended' && ac.resume) ac.resume().then(function () { logA('resumed ' + ac.state); });
+  }
+  window.addEventListener('pointerdown', gesture, true); window.addEventListener('keydown', gesture, true);
+
   /* ---------------- the shaft: a carousel of the four climbers ---------------- */
   var shaft = document.getElementById('shaft');
   var slides = shaft ? Array.prototype.slice.call(shaft.querySelectorAll('.slide')) : [];
@@ -229,7 +313,9 @@
     if (animate && title) { title.classList.remove('is-swap'); void title.offsetWidth; title.classList.add('is-swap'); }
     if (typeof paintHead === 'function') paintHead();
   }
+  var lastUserSwitch = 0;
   function show(i, fromUser) {
+    if (fromUser) { var nowS = Date.now(); if (nowS - lastUserSwitch < 250) return; lastUserSwitch = nowS; }
     if (!slides.length) return;
     cur = (i + slides.length) % slides.length;
     var id = slides[cur].getAttribute('data-char');
@@ -237,11 +323,12 @@
     dots.forEach(function (b, k) { b.classList.toggle('is-on', k === cur); if (k === cur) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
     shaft.setAttribute('data-on', id);
     setEdition(id, !first && !reduce.matches);
+    if (!first) charSound(id, !!fromUser);
     first = false;
     loadClip(cur); posterOnly((cur + 1) % slides.length);
     playCur();
     setPointerChar(id);
-    if (fromUser) userPausedUntil = Date.now() + 15000;
+    if (fromUser) userPausedUntil = Date.now() + 20000;
     restartMeter();
   }
   function restartMeter() {
@@ -263,11 +350,31 @@
     shaft.addEventListener('pointerleave', function () { hold(false); });
     shaft.addEventListener('focusin', function () { hold(true); });
     shaft.addEventListener('focusout', function () { hold(false); });
-    shaft.addEventListener('keydown', function (e) {
-      var rtl = d.getAttribute('dir') === 'rtl';
-      if (e.key === 'ArrowRight') { show(cur + (rtl ? -1 : 1), true); e.preventDefault(); }
-      if (e.key === 'ArrowLeft') { show(cur + (rtl ? 1 : -1), true); e.preventDefault(); }
+    window.addEventListener('keydown', function (e) {
+      if (e.defaultPrevented || e.altKey || e.metaKey || e.ctrlKey) return;
+      var t = e.target, tag = t && t.tagName;
+      if (t && (t.isContentEditable || tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT')) return;   /* never steal typing or the volume slider */
+      if (d.classList.contains('boot-on') || e.repeat) return;   /* a held key must not machine-gun the editions */
+      var k = e.key, rtl = d.getAttribute('dir') === 'rtl';
+      if (k === 'm' || k === 'M') { unlock(); setMuted(!muted); e.preventDefault(); return; }
+      if (!inView) return;                                   /* only while the hero is on screen */
+      if (k === 'ArrowRight') { show(cur + (rtl ? -1 : 1), true); e.preventDefault(); }
+      else if (k === 'ArrowLeft') { show(cur + (rtl ? 1 : -1), true); e.preventDefault(); }
+      else if (k === 'c' || k === 'C') { show(cur + 1, true); e.preventDefault(); }
     });
+    var portrait = document.querySelector('.edition__portrait');
+    if (portrait) {
+      portrait.addEventListener('click', function () { show(cur + 1, true); });
+      portrait.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { show(cur + 1, true); e.preventDefault(); } });
+    }
+    var ex = null, edCard = document.querySelector('.edition');   /* swipe on the edition card too */
+    if (edCard) {
+      edCard.addEventListener('touchstart', function (e) { ex = e.touches[0].clientX; }, { passive: true });
+      edCard.addEventListener('touchend', function (e) {
+        if (ex == null) return; var dx = e.changedTouches[0].clientX - ex; ex = null;
+        if (Math.abs(dx) > 40) show(cur + ((dx < 0) !== (d.getAttribute('dir') === 'rtl') ? 1 : -1), true);
+      }, { passive: true });
+    }
     var sx = null;   /* swipe between climbers on touch */
     shaft.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
     shaft.addEventListener('touchend', function (e) {

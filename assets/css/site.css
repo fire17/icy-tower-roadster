@@ -249,6 +249,30 @@ html:not(.js) .menu { padding-inline-start: 0; }
 @keyframes drop { from { translate: 0 -60px; clip-path: inset(0 0 100% 0); } to { translate: 0 0; clip-path: inset(0); } }
 @media (max-width: 899px) { .edition { --ps: .5714; gap: 1rem 1.2rem; } .edition .title__pitch { font-size: .95rem; } }
 
+
+/* ---------- sound: fixed on the start side (the FLOOR counter lives on the end side) ---------- */
+.vol { position: fixed; z-index: 30; inset-inline-start: max(12px, env(safe-area-inset-left)); bottom: max(12px, env(safe-area-inset-bottom));
+  display: flex; align-items: center; gap: .4rem; padding: .25rem .7rem .25rem .25rem;
+  background: color-mix(in srgb, var(--ground) 86%, transparent); border: 1px solid var(--rule); box-shadow: var(--shadow);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.vol__btn { width: 44px; height: 44px; display: grid; place-items: center; cursor: pointer; padding: 0;
+  font: 700 1.25rem/1 "Cousine", monospace; color: var(--ink); background: none; border: 1px solid transparent; }
+.vol__btn:hover { background: var(--sel); color: var(--sel-ink); }
+.vol__off, .vol.is-muted .vol__on { display: none; }
+.vol.is-muted .vol__off { display: inline; color: var(--tail); }
+.vol__slider { -webkit-appearance: none; appearance: none; width: 104px; height: 44px; margin: 0; background: none; cursor: pointer; }
+.vol__slider::-webkit-slider-runnable-track { height: 14px; border-style: solid; border-width: 0 8px; border-image: url("../img/game/ice.png") 0 8 fill / 0 8px / 0 round; image-rendering: pixelated; }
+.vol__slider::-moz-range-track { height: 14px; border-style: solid; border-width: 0 8px; border-image: url("../img/game/ice.png") 0 8 fill / 0 8px / 0 round; image-rendering: pixelated; }
+.vol__slider::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 24px; margin-top: -5px; background: var(--sel); border: 2px solid var(--sel-ink); border-radius: 2px; }
+.vol__slider::-moz-range-thumb { width: 12px; height: 22px; background: var(--sel); border: 2px solid var(--sel-ink); border-radius: 2px; }
+.vol.is-muted .vol__slider { opacity: .45; }
+@media (max-width: 599px) { .vol__slider { width: 68px; } .vol { padding: .1rem .45rem .1rem .1rem; gap: .2rem; background: color-mix(in srgb, var(--ground) 78%, transparent); } }
+.shaft__hint { margin: 0; padding: 0 .6rem .55rem; font-size: .72rem; color: var(--ink-2); text-align: center; letter-spacing: .02em; }
+.hint--touch { display: none; }
+@media (hover: none) and (pointer: coarse) { .hint--keys { display: none; } .hint--touch { display: inline; } }
+.edition__portrait { cursor: pointer; }
+.edition__portrait:focus-visible { outline-offset: 6px; }
+
 /* ---------- sprites: the climbers' own frames, 8 cells (idle, walk x4, jump x3) ---------- */
 .sprite { --s: 1; --f: 0; display: block; width: calc(var(--cw) * var(--s) * 1px); height: calc(var(--ch) * var(--s) * 1px);
   background: var(--sheet) calc(var(--f) * var(--cw) * var(--s) * -1px) 0 / calc(var(--cw) * 8 * var(--s) * 1px) calc(var(--ch) * var(--s) * 1px) no-repeat;
@@ -524,4 +548,4 @@ kbd {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
-@media print { .bar, .climb, .shaft, .menu__car, .ledge, .boot, .combo { display: none !important; } body { background: #fff; color: #000; } }
+@media print { .bar, .climb, .shaft, .menu__car, .ledge, .boot, .combo, .vol { display: none !important; } body { background: #fff; color: #000; } }
