@@ -227,6 +227,7 @@
     d.setAttribute('data-edition', id);
     Array.prototype.forEach.call(document.querySelectorAll('[data-ed]'), function (el) { el.classList.toggle('is-on', el.getAttribute('data-ed') === id); });
     if (animate && title) { title.classList.remove('is-swap'); void title.offsetWidth; title.classList.add('is-swap'); }
+    if (typeof paintHead === 'function') paintHead();
   }
   function show(i, fromUser) {
     if (!slides.length) return;
@@ -384,6 +385,50 @@
     store.set('it-lang', next); applyLang(next);
   });
   if (mqLight.addEventListener) mqLight.addEventListener('change', syncThemeUI);
+
+  /* ---------------- title heads: the original menu's bob + sway ----------------
+     Exact port of it_original_menu_face_transform (game/native/original_menu_visual.c), 50 Hz menu tick.
+     Original cosine table == round(cos * 65536); phase>>15 indices reduce to (tick*k - 128) & 511.
+       bob   = fixed_round(cos[(tick*10 - 128) & 511] * 10) + 10   -> 0..20 px, period 51.2 ticks
+       angle = cos[(tick*6 - 128) & 511] * 5 (Allegro units, 256 = 360 deg) -> +-7.03 deg, period 85.33 ticks
+     Expression: each tick, 1 in 198 chance to advance face (face+1) % 3, as the original. */
+  var COS = []; for (var ci = 0; ci < 512; ci++) COS.push(Math.round(Math.cos(ci * Math.PI / 256) * 65536));
+  function fixedRound(v) { return (v >> 16) + ((v & 32768) ? 1 : 0); }
+  function faceAt(tick) {
+    return { bob: fixedRound(COS[(tick * 10 - 128) & 511] * 10) + 10, deg: COS[(tick * 6 - 128) & 511] * 5 / 65536 * 360 / 256 };
+  }
+  var mtick = 0, mface = 0, acc = 0, lastT = 0, headRaf = 0, headVisible = true, wall = document.querySelector('.edition__wall');
+  var freezeAt = /[?&]facetick=(\d+)/.exec(location.search);   /* test hook: freeze at a given tick */
+  function paintHead() {
+    var p = document.querySelector('.portrait.is-on'); if (!p) return;
+    var ps = parseFloat(getComputedStyle(p.parentNode.parentNode).getPropertyValue('--ps')) || 1, f = faceAt(mtick);
+    p.style.transform = 'translateY(' + ((f.bob - 20) * ps).toFixed(2) + 'px) rotate(' + f.deg.toFixed(3) + 'deg)' + (d.getAttribute('dir') === 'rtl' ? ' scaleX(-1)' : '');
+    p.style.setProperty('--fr', mface);
+    /* it_original_menu_background_transform: source_x = round(cos(t)*160)+160, source_y = round(cos(t - 90deg)*120)+120,
+       t advancing one Allegro unit (1/256 turn) per tick; our wall tile is drawn at half that pan, 2x zoom */
+    if (wall) {
+      var sx = fixedRound(COS[(mtick * 2) & 511] * 160) + 160, sy = fixedRound(COS[(mtick * 2 - 128) & 511] * 120) + 120;
+      wall.style.setProperty('--wx', (-sx / 2) + 'px'); wall.style.setProperty('--wy', (-sy / 2) + 'px');
+    }
+  }
+  function headLoop(now) {
+    headRaf = 0;
+    if (!headVisible || reduce.matches) { lastT = 0; return; }
+    if (lastT) acc += Math.min(now - lastT, 250);
+    lastT = now;
+    while (acc >= 20) { acc -= 20; mtick++; if (Math.random() * 198 < 1) mface = (mface + 1) % 3; }
+    paintHead();
+    headRaf = requestAnimationFrame(headLoop);
+  }
+  function startHeads() {
+    if (freezeAt) { mtick = +freezeAt[1]; paintHead(); window.itFaceTick = function (t, face) { mtick = t; if (face != null) mface = face; paintHead(); }; return; }
+    if (reduce.matches) { Array.prototype.forEach.call(document.querySelectorAll('.portrait'), function (p) { p.style.transform = d.getAttribute('dir') === 'rtl' ? 'scaleX(-1)' : ''; p.style.setProperty('--fr', 0); }); return; }
+    if (!headRaf) headRaf = requestAnimationFrame(headLoop);
+  }
+  var edEl = document.querySelector('.edition');
+  if (edEl && 'IntersectionObserver' in window) new IntersectionObserver(function (es) { headVisible = es[0].isIntersecting; if (headVisible) startHeads(); }).observe(edEl);
+  if (reduce.addEventListener) reduce.addEventListener('change', startHeads);
+  startHeads();
 
   /* ---------------- boot: PRESS START (once per visit; any key or tap skips) ---------------- */
   (function boot() {

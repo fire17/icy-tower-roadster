@@ -218,13 +218,18 @@ html:not(.js) .menu { padding-inline-start: 0; }
 .edition__portrait::before { /* a spotlight in the edition colour */
   content: ""; position: absolute; inset: -12% -22% 4%; z-index: 0;
   background: radial-gradient(closest-side, color-mix(in srgb, var(--sel) 30%, transparent), transparent); }
+.edition__wall { /* a window onto the tower wall, panned like the original title screen's background */
+  position: absolute; z-index: 0; inset: -6% -14% 10%; border-radius: 50%; opacity: .55;
+  background: #11122a url("../img/game/bricks.png") var(--wx, 0) var(--wy, 0) / 128px 64px repeat; image-rendering: pixelated;
+  -webkit-mask: radial-gradient(closest-side, #000 55%, transparent); mask: radial-gradient(closest-side, #000 55%, transparent); }
 .edition__portrait::after { /* the ice ledge the climber stands on */
   content: ""; position: absolute; inset: auto -6px 0; height: 21px;
   border-style: solid; border-width: 0 12px; border-image: url("../img/game/ice.png") 0 8 fill / 0 12px / 0 round; image-rendering: pixelated; }
 .portrait { --pw: 196; --ph: 224; position: absolute; z-index: 1; left: 50%; bottom: 20px; display: none;
   width: calc(var(--pw) * var(--ps) * 1px); height: calc(var(--ph) * var(--ps) * 1px); margin-left: calc(var(--pw) * var(--ps) * -.5px);
-  background: var(--psheet) 0 0 / calc(var(--pw) * 3 * var(--ps) * 1px) 100% no-repeat; image-rendering: pixelated; }
-.portrait.is-on { display: block; animation: face 7s steps(1) infinite; }
+  background: var(--psheet) calc(var(--fr, 0) * var(--pw) * var(--ps) * -1px) 0 / calc(var(--pw) * 3 * var(--ps) * 1px) 100% no-repeat; image-rendering: pixelated;
+  transform-origin: 50% 50%; will-change: transform; }
+.portrait.is-on { display: block; }
 .portrait[data-ed="harold"]   { --psheet: url("../img/game/portrait-harold.png"); --pw: 208; --ph: 265; image-rendering: auto; }
 .portrait[data-ed="dave"]     { --psheet: url("../img/game/portrait-dave.png"); }
 .portrait[data-ed="template"] { --psheet: url("../img/game/portrait-template.png"); }
@@ -235,12 +240,10 @@ html:not(.js) .menu { padding-inline-start: 0; }
   background: radial-gradient(ellipse 26% 60% at 22% 30%, rgb(var(--puff) / .8), transparent 70%),
               radial-gradient(ellipse 22% 55% at 58% 8%, rgb(var(--puff) / .7), transparent 70%),
               radial-gradient(ellipse 70% 45% at 40% 100%, rgb(var(--puff) / .45), transparent 72%); }
-@keyframes face { 0%, 78% { background-position-x: 0; } 80%, 88% { background-position-x: calc(var(--pw) * var(--ps) * -1px); }
-  90%, 97% { background-position-x: calc(var(--pw) * var(--ps) * -2px); } 100% { background-position-x: 0; } }
 /* the swap: the tower shakes, then the new floor scrolls in from above */
 .title.is-swap .banner { animation: shake .32s steps(4) 1; }
 .title.is-swap .ed.is-on, .title.is-swap .title__pitch.is-on { animation: wipe .5s steps(7) 1; }
-.title.is-swap .portrait.is-on { animation: drop .55s steps(7) 1, face 7s steps(1) .55s infinite; }
+.title.is-swap .portrait.is-on { animation: drop .55s steps(7) 1; }
 @keyframes shake { 0% { translate: 0 0; } 25% { translate: -3px 2px; } 50% { translate: 3px -1px; } 75% { translate: -2px -2px; } 100% { translate: 0 0; } }
 @keyframes wipe { from { clip-path: inset(0 0 100% 0); translate: 0 -14px; } to { clip-path: inset(0); translate: 0 0; } }
 @keyframes drop { from { translate: 0 -60px; clip-path: inset(0 0 100% 0); } to { translate: 0 0; clip-path: inset(0); } }
