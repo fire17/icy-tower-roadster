@@ -18,9 +18,9 @@
 
 **[▶ Play now](https://icytower.akeyo.io/play/)** · **[⬇ Download](#-get-it-in-30-seconds)** · **[🚀 The thrusters](#-where-the-gas-comes-out)** · **[🎯 1:1 faithful](#-11-faithful-the-original-game-not-a-lookalike)** · **[🧊 Credits](#-credits-free-lunch-design-first)** · **[🌐 Website](https://icytower.akeyo.io)**
 
-<a href="assets/video/roadster-gameplay.mp4"><img src="assets/readme/gameplay.gif" width="240" alt="Gameplay: the Roadster takes off on two jets of gas, backflips upside down and lands in a cloud"></a>
+<a href="assets/video/chars/roadster-sound.mp4"><img src="assets/readme/gameplay.gif" width="320" alt="Gameplay in the wide tower view: the Roadster jumps up the ice floors on jets of cold gas"></a>
 
-<sub>6 seconds of real gameplay · <a href="assets/video/roadster-gameplay.mp4">watch the full 34 s with sound</a></sub>
+<sub>5 seconds of real gameplay · <a href="assets/video/chars/roadster-sound.mp4">watch 13 s with sound</a> · the site also shows Harold, Disco Dave and the Template</sub>
 
 </div>
 
@@ -181,8 +181,8 @@ Made by fire17 & friends: one human and a team of AI agents. The thruster effect
 |---|---|
 | `index.html`, `assets/css`, `assets/js` | The website: one static page in English and Hebrew, light and dark |
 | `play/` | The browser build of the game |
-| `assets/video/` | The gameplay video (34 s, with sound) and the muted teaser loop |
-| `assets/img/` | Roadster sprites, gas stills, icons, social card |
+| `assets/video/chars/` | Wide gameplay loops of all four climbers (muted, with posters) and a Roadster clip with sound |
+| `assets/img/` | Roadster sprites, climber sprite sheets and ice/brick tiles (`img/game/`, made by `tools/make_site_assets.py`), gas stills, icons, social card |
 | `.github/workflows/pages.yml` | Checks every local link, then publishes to GitHub Pages |
 | `tools/check_links.py` | The offline link and anchor checker the workflow runs |
 | `CREDITS.md`, `LICENSE` | Notices and licenses |

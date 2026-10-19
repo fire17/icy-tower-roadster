@@ -29,7 +29,7 @@
 <meta name="twitter:image" content="https://icytower.akeyo.io/assets/img/og.png">
 <link rel="preload" href="assets/fonts/cousine-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/cousine-700-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/site.css?v=7">
+<link rel="stylesheet" href="assets/css/site.css?v=13">
 <script>
   /* Theme + language before first paint, so nothing flashes. */
   (function () {
@@ -41,6 +41,9 @@
     if (t === 'light' || t === 'dark') d.setAttribute('data-theme', t);
     if (l === 'he') { d.setAttribute('lang', 'he'); d.setAttribute('dir', 'rtl'); }
     d.classList.add('js');
+    var rm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches, seen = null;
+    try { seen = sessionStorage.getItem('it-boot'); } catch (e) {}
+    if (!rm && !seen && !/[?&]noboot\b/.test(location.search)) d.classList.add('boot-on');
   })();
 </script>
 <script type="application/ld+json">
@@ -48,6 +51,14 @@
 </script>
 </head>
 <body>
+<div class="boot" id="boot" aria-hidden="true">
+  <div class="boot__in">
+    <p class="boot__t">ICY TOWER<span>ROADSTER EDITION</span></p>
+    <div class="boot__tower"><span class="boot__climber"></span></div>
+    <p class="boot__floor">FLOOR <b id="boot-floor">000</b></p>
+    <p class="boot__press">PRESS START</p>
+  </div>
+</div>
 <a class="skip" href="#general" data-i18n="skip">Skip to the readme</a>
 
 <header class="bar">
@@ -101,21 +112,70 @@
           <li><a class="menu__item" href="#roadster" data-i18n="menu.roadster">THE ROADSTER</a></li>
           <li><a class="menu__item" href="#credits" data-i18n="menu.credits">CREDITS</a></li>
         </ul>
-        <img class="menu__car px" src="assets/img/car.png" width="61" height="21" alt="">
+        <span class="menu__car sprite" data-char="roadster" aria-hidden="true"></span>
       </nav>
             <p class="parity"><a href="#faithful"><span class="parity__n">16/16</span> <span data-i18n="parity">original replays · Mac = Windows = Web · 145,141 tick hashes identical</span></a></p>
     </div>
 
-    <figure class="shaft">
-      <video class="shaft__video" id="teaser" autoplay muted loop playsinline preload="metadata" poster="assets/video/poster.jpg" width="540" height="810" aria-label="Gameplay: the Roadster jumping and backflipping up the tower, jets of white gas under it">
-        <source src="assets/video/teaser.mp4" type="video/mp4">
-      </video>
-      <button type="button" class="shaft__sound" id="sound" data-i18n="sound">[ &#9654; WATCH 34s WITH SOUND ]</button>
-      <figcaption class="sr-only" data-i18n="video.caption">A 34-second gameplay clip recorded from the Mac app.</figcaption>
+    <figure class="shaft" id="shaft" aria-roledescription="carousel" aria-label="The four climbers" data-i18n-aria="shaft.aria">
+      <div class="shaft__slides">
+        <div class="slide is-on" data-char="roadster" role="group" aria-roledescription="slide" aria-label="1 / 4">
+          <div class="slide__media">
+            <div class="slide__scene" aria-hidden="true"><span class="slide__ledge"></span><span class="slide__sprite sprite" data-char="roadster"></span></div>
+            <video class="slide__video" muted loop playsinline preload="none" aria-hidden="true"></video>
+          </div>
+          <div class="slide__cap">
+            <p class="slide__name"><span class="slide__no">1/4</span> <b data-i18n="char.roadster">TESLA ROADSTER</b></p>
+            <p class="slide__blurb" data-i18n="char.roadster.blurb">The 2026 Roadster. Backflips up the tower on cold-gas jets that fire from the real nozzle positions.</p>
+          </div>
+        </div>
+        <div class="slide" data-char="harold" role="group" aria-roledescription="slide" aria-label="2 / 4" aria-hidden="true">
+          <div class="slide__media">
+            <div class="slide__scene" aria-hidden="true"><span class="slide__ledge"></span><span class="slide__sprite sprite" data-char="harold"></span></div>
+            <video class="slide__video" muted loop playsinline preload="none" aria-hidden="true"></video>
+          </div>
+          <div class="slide__cap">
+            <p class="slide__name"><span class="slide__no">2/4</span> <b data-i18n="char.harold">HAROLD THE HOMEBOY</b></p>
+            <p class="slide__blurb" data-i18n="char.harold.blurb">The original climber since 2001. Beanie on, no thrusters, all legs.</p>
+          </div>
+        </div>
+        <div class="slide" data-char="dave" role="group" aria-roledescription="slide" aria-label="3 / 4" aria-hidden="true">
+          <div class="slide__media">
+            <div class="slide__scene" aria-hidden="true"><span class="slide__ledge"></span><span class="slide__sprite sprite" data-char="dave"></span></div>
+            <video class="slide__video" muted loop playsinline preload="none" aria-hidden="true"></video>
+          </div>
+          <div class="slide__cap">
+            <p class="slide__name"><span class="slide__no">3/4</span> <b data-i18n="char.dave">DISCO DAVE</b></p>
+            <p class="slide__blurb" data-i18n="char.dave.blurb">Afro, pink suit, white flares. The original game's second climber, still dancing up the floors.</p>
+          </div>
+        </div>
+        <div class="slide" data-char="template" role="group" aria-roledescription="slide" aria-label="4 / 4" aria-hidden="true">
+          <div class="slide__media">
+            <div class="slide__scene" aria-hidden="true"><span class="slide__ledge"></span><span class="slide__sprite sprite" data-char="template"></span></div>
+            <video class="slide__video" muted loop playsinline preload="none" aria-hidden="true"></video>
+          </div>
+          <div class="slide__cap">
+            <p class="slide__name"><span class="slide__no">4/4</span> <b data-i18n="char.template">THE TEMPLATE</b></p>
+            <p class="slide__blurb" data-i18n="char.template.blurb">The blank outline the original game shipped so anyone could draw their own climber.</p>
+          </div>
+        </div>
+      </div>
+      <div class="shaft__nav">
+        <button type="button" class="shaft__btn" id="prev" aria-label="Previous climber" data-i18n-aria="shaft.prev">&#9664;</button>
+        <span class="shaft__dots">
+          <button type="button" class="shaft__dot is-on" aria-current="true" data-go="0"><span class="sr-only">Tesla Roadster</span></button>
+          <button type="button" class="shaft__dot" data-go="1"><span class="sr-only">Harold</span></button>
+          <button type="button" class="shaft__dot" data-go="2"><span class="sr-only">Disco Dave</span></button>
+          <button type="button" class="shaft__dot" data-go="3"><span class="sr-only">Template</span></button>
+        </span>
+        <button type="button" class="shaft__btn" id="next" aria-label="Next climber" data-i18n-aria="shaft.next">&#9654;</button>
+        <span class="shaft__meter" aria-hidden="true"><i></i></span>
+      </div>
+      <button type="button" class="shaft__sound" id="sound" data-i18n="sound">[ &#9654; WATCH WITH SOUND ]</button>
     </figure>
   </section>
 
-  <div class="rule" aria-hidden="true"></div>
+  <div class="ledge" data-char="harold" aria-hidden="true"><span class="ledge__walker sprite" data-char="harold"></span></div>
 
   <!-- ===================== GENERAL ===================== -->
   <section class="doc" id="general" data-floor="10" aria-labelledby="general-h">
@@ -168,6 +228,8 @@
       </p>
     </div>
   </section>
+
+  <div class="ledge" data-char="dave" aria-hidden="true"><span class="ledge__walker sprite" data-char="dave"></span></div>
 
   <!-- ===================== INSTALLING ===================== -->
   <section class="doc" id="installing" data-floor="30" aria-labelledby="installing-h">
@@ -266,6 +328,8 @@
     </ol>
   </section>
 
+  <div class="ledge" data-char="template" aria-hidden="true"><span class="ledge__walker sprite" data-char="template"></span></div>
+
   <!-- ===================== CREDITS ===================== -->
   <section class="credits" id="credits" data-floor="50" aria-labelledby="credits-h">
     <div class="credits__in">
@@ -308,6 +372,7 @@
 </main>
 
 <footer class="foot">
+  <div class="ledge" data-char="roadster" aria-hidden="true"><span class="ledge__walker sprite" data-char="roadster"></span></div>
   <pre class="foot__rule" aria-hidden="true"></pre>
   <p>
     <a href="https://github.com/fire17/icy-tower-roadster" rel="noopener">GitHub</a> ·
@@ -325,6 +390,6 @@
   <div class="climb__floor"><span class="climb__label">FLOOR</span> <span class="climb__num">000</span></div>
 </div>
 
-<script src="assets/js/site.js?v=7" defer></script>
+<script src="assets/js/site.js?v=13" defer></script>
 </body>
 </html>

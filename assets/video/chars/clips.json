@@ -1,0 +1,19 @@
+{
+ "roadster": {
+  "src": "roadster.mp4",
+  "poster": "roadster-poster.jpg",
+  "sound": "roadster-sound.mp4"
+ },
+ "harold": {
+  "src": "harold.mp4",
+  "poster": "harold-poster.jpg"
+ },
+ "dave": {
+  "src": "dave.mp4",
+  "poster": "dave-poster.jpg"
+ },
+ "template": {
+  "src": "template.mp4",
+  "poster": "template-poster.jpg"
+ }
+}

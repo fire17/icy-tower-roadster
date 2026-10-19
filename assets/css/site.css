@@ -87,7 +87,7 @@ html { scrollbar-color: var(--rule) var(--ground); }
 }
 .bar__brand { display: inline-flex; align-items: center; gap: 1ch; text-decoration: none; font-weight: 700; letter-spacing: .02em; white-space: nowrap; }
 .bar__brand img { width: 46px; height: auto; }
-[dir="rtl"] .bar__brand img, [dir="rtl"] .menu__car { transform: scaleX(-1); }
+[dir="rtl"] .bar__brand img, [dir="rtl"] .sprite { transform: scaleX(-1); }
 .bar__dim { color: var(--ink-2); font-weight: 400; }
 .bar__nav { display: flex; gap: 2.5ch; margin-inline-start: auto; }
 .bar__nav a { text-decoration: none; color: var(--ink-2); }
@@ -152,37 +152,19 @@ html { scrollbar-color: var(--rule) var(--ground); }
 .menu li:nth-child(n+4) .menu__item { font-size: clamp(.95rem, .6vw + .75rem, 1.15rem); font-weight: 400; color: var(--ink-2); }
 .menu li:nth-child(n+4) .menu__item.is-on { color: var(--sel-ink); }
 .menu__car {
-  position: absolute; inset-inline-start: 0; top: 0; width: 61px; height: 21px;
+  position: absolute; inset-inline-start: calc((61px - var(--cw) * var(--s) * 1px) / 2); top: 0; --s: .95;
   translate: 0 var(--y, 14px); transition: translate .32s cubic-bezier(.16, 1, .3, 1);
 }
+.menu__car:not([data-char="roadster"]) { --s: .82; }
+.menu__car.is-swap { animation: hop .42s cubic-bezier(.3, 1.6, .5, 1); }
 html:not(.js) .menu__car { display: none; }
 @media (max-width: 599px) {
   .menu { padding-inline-start: calc(42px + 1ch); }
-  .menu__car { width: 42px; height: auto; }
+  .menu__car { --s: .66; inset-inline-start: 0; }
+  .menu__car:not([data-char="roadster"]) { --s: .62; }
   .menu__item { padding-inline: 10px; }
 }
 html:not(.js) .menu { padding-inline-start: 0; }
-
-/* the tower shaft: the video column */
-.shaft { position: relative; margin: 0; height: min(calc(100svh - 7.5rem), 800px); aspect-ratio: 2 / 3; justify-self: end; align-self: center;
-  background: #262848; box-shadow: var(--shadow); }
-.shaft::before { /* tail-light hairline atop the shaft */
-  content: ""; position: absolute; inset: -6px 0 auto; height: 2px; background: var(--tail); }
-.shaft__video { display: block; width: 100%; height: 100%; object-fit: cover; background: #262848; }
-.shaft__sound {
-  position: absolute; inset-inline: 0; bottom: 1rem; margin: 0 auto; width: fit-content;
-  font: 700 .875rem/1 "Cousine", monospace; letter-spacing: .03em; cursor: pointer;
-  background: var(--ground); color: var(--ink); border: 1px solid var(--rule); padding: .85rem 1.4ch; min-height: 44px;
-  box-shadow: var(--shadow);
-}
-.shaft__sound:hover { background: var(--sel); color: var(--sel-ink); border-color: var(--sel); }
-.shaft.is-full .shaft__sound { display: none; }
-
-@media (max-width: 899px) {
-  .title { grid-template-columns: 1fr; min-height: 0; gap: 3rem; }
-  .shaft { justify-self: stretch; height: auto; width: 100%; max-width: 520px; margin-inline: auto; }
-}
-@media (max-width: 899px) and (min-width: 600px) { .shaft { max-width: 460px; } }
 
 /* parity receipt under the downloads */
 .parity { margin: 1rem 0 0; font-size: .875rem; }
@@ -201,20 +183,127 @@ html:not(.js) .menu { padding-inline-start: 0; }
 .doc__h3--first { margin-top: 0; }
 @media (max-width: 599px) { .proof div { grid-template-columns: 1fr; gap: .3rem; } }
 
-/* phone: the teaser sits right under the tagline, as a small square window into the shaft */
+/* phone: the climber carousel sits right under the tagline */
 @media (max-width: 899px) {
-  .title { gap: 0; }
+  .title { grid-template-columns: 1fr; min-height: 0; gap: 0; }
   .title__text { display: contents; }
   .title__presents { order: 1; } .title__h { order: 2; } .title__pitch { order: 3; }
-  .shaft { order: 4; margin-top: 1.8rem; aspect-ratio: 4 / 3; width: 100%; max-width: 520px; justify-self: center; }
-  .menu { order: 5; } .title__req { order: 6; } .parity { order: 7; }
-  .shaft__video { object-position: 50% 45%; }
-  .shaft__sound { bottom: .75rem; font-size: .8rem; padding: .7rem 1.2ch; }
+  .shaft { order: 4; margin-top: 1.8rem; }
+  .menu { order: 5; } .parity { order: 7; }
 }
 
+/* ---------- sprites: the climbers' own frames, 8 cells (idle, walk x4, jump x3) ---------- */
+.sprite { --s: 1; --f: 0; display: block; width: calc(var(--cw) * var(--s) * 1px); height: calc(var(--ch) * var(--s) * 1px);
+  background: var(--sheet) calc(var(--f) * var(--cw) * var(--s) * -1px) 0 / calc(var(--cw) * 8 * var(--s) * 1px) calc(var(--ch) * var(--s) * 1px) no-repeat;
+  image-rendering: pixelated; }
+[data-char="roadster"] { --sheet: url("../img/game/roadster.png"); --cw: 64; --ch: 26; }
+[data-char="harold"]   { --sheet: url("../img/game/harold.png");   --cw: 30; --ch: 52; }
+[data-char="dave"]     { --sheet: url("../img/game/dave.png");     --cw: 30; --ch: 52; }
+[data-char="template"] { --sheet: url("../img/game/template.png"); --cw: 30; --ch: 52; }
+@keyframes walk { from { background-position-x: calc(var(--cw) * var(--s) * -1px); } to { background-position-x: calc(var(--cw) * var(--s) * -5px); } }
+@keyframes jumpf { 0%, 55% { background-position-x: 0; } 60% { background-position-x: calc(var(--cw) * var(--s) * -5px); } 75% { background-position-x: calc(var(--cw) * var(--s) * -6px); } 90% { background-position-x: calc(var(--cw) * var(--s) * -7px); } 100% { background-position-x: 0; } }
+@keyframes hopy { 0%, 55% { translate: 0 0; } 75% { translate: 0 calc(var(--ch) * var(--s) * -.9px - 18px); } 95%, 100% { translate: 0 0; } }
+@keyframes hop { 0% { translate: 0 var(--y, 14px); } 45% { translate: 0 calc(var(--y, 14px) - 12px); } 100% { translate: 0 var(--y, 14px); } }
+
+/* ---------- the tower shaft: a carousel of the four climbers ---------- */
+.shaft { position: relative; margin: 0; width: min(42vw, 540px); --px: 3; justify-self: end; align-self: start; margin-top: clamp(3rem, 9vh, 6rem);
+  background: var(--ground-2); box-shadow: var(--shadow); }
+.shaft::before { content: ""; position: absolute; inset: -6px 0 auto; height: 2px; background: var(--tail); }
+.shaft__slides { display: grid; width: 100%; background: #1a1b38; }
+.slide { grid-area: 1 / 1; min-width: 0; opacity: 0; visibility: hidden; transition: opacity .45s ease-out, visibility 0s .45s; }
+.slide.is-on { opacity: 1; visibility: visible; transition: opacity .45s ease-out; }
+.slide__media { position: relative; aspect-ratio: var(--ar, 4 / 3); overflow: hidden; background: #11122a; }
+.slide__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: transparent; opacity: 0; transition: opacity .3s; }
+.slide.has-video .slide__video { opacity: 1; }
+.slide__scene { position: absolute; inset: 0; background: #11122a url("../img/game/bricks.png") 0 0 / calc(64px * var(--px)) calc(32px * var(--px)) repeat; image-rendering: pixelated; }
+.slide__scene::before { /* a dim shaft of light from above */
+  content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 55% at 50% 40%, rgb(191 233 245 / .14), transparent 70%), linear-gradient(rgb(8 8 24 / .38), rgb(8 8 24 / .38)), linear-gradient(transparent 50%, rgb(10 10 30 / .6)); }
+.slide__ledge { position: absolute; left: 14%; right: 14%; bottom: 30%; height: calc(14px * var(--px));
+  border-style: solid; border-width: 0 calc(8px * var(--px)); border-image: url("../img/game/ice.png") 0 8 fill / 0 calc(8px * var(--px)) / 0 round; image-rendering: pixelated; }
+.slide__ledge::before, .slide__ledge::after { content: ""; position: absolute; height: calc(14px * var(--px)); width: 46%;
+  border-style: solid; border-width: 0 calc(8px * var(--px)); border-image: url("../img/game/ice.png") 0 8 fill / 0 calc(8px * var(--px)) / 0 round; }
+.slide__ledge::before { left: -22%; bottom: 210%; } .slide__ledge::after { right: -24%; bottom: 420%; }
+.slide__sprite { position: absolute; left: 50%; bottom: calc(30% + 14px * var(--px) - 2px); --s: var(--px); margin-left: calc(var(--cw) * var(--s) * -.5px); }
+.slide.is-on .slide__sprite { animation: jumpf 2.4s steps(1) infinite, hopy 2.4s cubic-bezier(.3, .7, .4, 1) infinite; }
+.slide.has-video .slide__scene { visibility: hidden; }
+.slide__cap { padding: .85rem 1.1rem .7rem; color: #f1f5fa; background: #15163a; border-top: 2px solid #2b2d5a; }
+.slide__name { margin: 0; font-weight: 700; letter-spacing: .06em; font-size: 1.05rem; }
+.slide__no { color: #bfe9f5; font-weight: 400; margin-inline-end: .6ch; }
+.slide__blurb { margin: .3rem 0 0; font-size: .82rem; line-height: 1.5; color: #c9d2e6; max-width: 46ch; }
+.shaft__nav { display: flex; align-items: center; gap: .6ch; padding: .45rem .5rem; position: relative; }
+.shaft__btn { font: 700 .9rem/1 "Cousine", monospace; color: var(--ink); background: none; border: 1px solid var(--rule); min-width: 44px; min-height: 44px; cursor: pointer; }
+.shaft__btn:hover { background: var(--sel); color: var(--sel-ink); border-color: var(--sel); }
+[dir="rtl"] .shaft__btn { transform: scaleX(-1); }
+.shaft__dots { display: flex; gap: 2px; flex: 1; justify-content: center; }
+.shaft__dot { width: 44px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer; display: grid; place-items: center; }
+.shaft__dot::before { content: ""; width: 28px; height: 10px; border-style: solid; border-width: 0 5px; opacity: .4;
+  border-image: url("../img/game/ice.png") 0 8 fill / 0 5px / 0 stretch; image-rendering: pixelated; transition: opacity .2s, width .2s; }
+.shaft__dot.is-on::before { opacity: 1; width: 36px; }
+.shaft__dot:hover::before { opacity: .8; }
+.shaft__meter { position: absolute; inset: auto .5rem 0; height: 2px; background: var(--rule); overflow: hidden; }
+.shaft__meter i { display: block; height: 100%; width: 100%; background: var(--sel); transform-origin: 0 50%; transform: scaleX(0); }
+[dir="rtl"] .shaft__meter i { transform-origin: 100% 50%; }
+.shaft.is-auto .shaft__meter i { animation: meter var(--dwell, 7s) linear forwards; }
+.shaft.is-held .shaft__meter i { animation-play-state: paused; }
+@keyframes meter { to { transform: scaleX(1); } }
+.shaft__sound { position: absolute; inset-inline: 0; top: .8rem; margin: 0 auto; width: fit-content; z-index: 3;
+  font: 700 .8rem/1 "Cousine", monospace; letter-spacing: .03em; cursor: pointer;
+  background: rgb(19 20 42 / .86); color: #e9eef6; border: 1px solid #3b3e6e; padding: .75rem 1.3ch; min-height: 44px; }
+.shaft__sound:hover { background: #bfe9f5; color: #0f1131; border-color: #bfe9f5; }
+.shaft:not([data-on="roadster"]) .shaft__sound, .shaft.is-full .shaft__sound { display: none; }
+.shaft.is-full .slide__cap { display: none; }
+@media (max-width: 899px) {
+  .shaft { justify-self: stretch; width: 100%; max-width: 560px; margin-inline: auto; }
+  .shaft { --px: 2; }
+  .slide__blurb { font-size: .78rem; }
+}
+
+/* ---------- ledges: section dividers with a climber walking the ice ---------- */
+.ledge { max-width: var(--wrap); margin: 0 auto; padding: 0 var(--gutter); height: calc(52px + 14px + 1.4rem); position: relative; container-type: inline-size; }
+.ledge::after { content: ""; position: absolute; inset-inline: var(--gutter); bottom: 0; height: 14px;
+  border-style: solid; border-width: 0 8px; border-image: url("../img/game/ice.png") 0 8 fill / 0 8px / 0 round; image-rendering: pixelated; }
+.ledge__walker { position: absolute; bottom: 13px; inset-inline-start: var(--gutter); --f: 0; }
+.js .ledge.is-live .ledge__walker { animation: walk .56s steps(4) infinite, stroll var(--t, 22s) linear infinite; }
+.ledge[data-char="roadster"] .ledge__walker { --t: 12s; }
+@keyframes stroll { 0% { translate: 0 0; scale: 1 1; } 49.99% { translate: calc(100cqi - 2 * var(--gutter) - var(--cw) * 1px) 0; scale: 1 1; }
+  50% { translate: calc(100cqi - 2 * var(--gutter) - var(--cw) * 1px) 0; scale: -1 1; } 100% { translate: 0 0; scale: -1 1; } }
+[dir="rtl"] .ledge__walker { animation-direction: normal, reverse; }
+
+/* ---------- combo bursts: hover a menu item or button ---------- */
+.combo { position: fixed; z-index: 60; pointer-events: none; white-space: nowrap; direction: ltr;
+  font: 700 var(--cs, 1.5rem)/1 "Cousine", monospace; letter-spacing: .01em; font-style: italic;
+  color: #ffe36e; background: linear-gradient(180deg, #fffbd0 0 22%, #ffe36e 22% 46%, #ffa23f 46% 70%, #ff4f8b 70%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 2px #120f2e; paint-order: stroke fill;
+  filter: drop-shadow(3px 3px 0 #120f2e) drop-shadow(0 0 10px rgb(255 160 80 / .35)); animation: combo .95s cubic-bezier(.2, .9, .3, 1) forwards; }
+@keyframes combo { 0% { transform: translate(-50%, 0) scale(.3) rotate(-10deg); opacity: 0; }
+  22% { transform: translate(-50%, -14px) scale(1.18) rotate(-5deg); opacity: 1; }
+  70% { transform: translate(-50%, -26px) scale(1) rotate(-4deg); opacity: 1; }
+  100% { transform: translate(-50%, -40px) scale(.96) rotate(-4deg); opacity: 0; } }
+
+/* ---------- boot: PRESS START, once per visit ---------- */
+.boot { display: none; }
+.boot-on .boot { display: grid; place-items: center; position: fixed; inset: 0; z-index: 100; background: #13142a; color: #e9eef6;
+  transition: opacity .35s ease-out, visibility 0s .35s; }
+.boot-on body { overflow: hidden; }
+.boot.is-out { opacity: 0; visibility: hidden; }
+.boot__in { display: grid; justify-items: center; gap: 1.1rem; text-align: center; }
+.boot__t { margin: 0; font-weight: 700; font-size: clamp(1.6rem, 6vw, 2.6rem); letter-spacing: .14em; line-height: 1.1; }
+.boot__t span { display: block; margin-top: .45rem; font-size: .42em; letter-spacing: .5em; color: #bfe9f5; border-top: 2px solid #ff4040; padding-top: .5rem; }
+.boot__tower { position: relative; width: 120px; height: 180px; background: url("../img/game/tower.png") 0 0 / 120px 180px repeat-y;
+  image-rendering: pixelated; border-inline: 6px solid #2b2d5a; box-shadow: 0 0 0 1px #0b0b1c, 0 18px 40px -16px #000; animation: climb 1.1s linear infinite; }
+@keyframes climb { to { background-position-y: 180px; } }
+.boot__climber { position: absolute; left: 50%; bottom: 46px; width: 64px; height: 26px; margin-left: -32px;
+  background: url("../img/game/roadster.png") 0 0 / 512px 26px no-repeat; image-rendering: pixelated; animation: boothop .55s ease-in-out infinite alternate; }
+@keyframes boothop { from { translate: 0 0; background-position-x: -320px; } to { translate: 0 -22px; background-position-x: -384px; } }
+.boot__floor { margin: 0; font-size: .9rem; letter-spacing: .2em; color: #aab3d1; }
+.boot__floor b { color: #e9eef6; font-size: 1.4rem; letter-spacing: .08em; margin-inline-start: .6ch; }
+.boot__press { margin: .2rem 0 0; font-weight: 700; letter-spacing: .3em; font-size: .95rem; color: #bfe9f5; opacity: 0; }
+.boot.is-ready .boot__press { animation: blink .26s steps(1) 4 forwards; }
+@keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
+
 /* ---------- readme sections ---------- */
-.rule { max-width: var(--wrap); margin: 0 auto; padding: 0 var(--gutter); height: 1.2em; overflow: hidden; color: var(--rule); }
-.rule::before, .foot__rule::before { content: "=========================================================================================================================================================================="; white-space: pre; display: block; overflow: hidden; }
+.foot__rule::before { content: "=========================================================================================================================================================================="; white-space: pre; display: block; overflow: hidden; }
 .doc { max-width: var(--wrap); margin: 0 auto; padding: var(--step) var(--gutter) 0; }
 .doc__h { margin: 0; font-size: clamp(1.5rem, 1.8vw + .9rem, 2.4rem); font-weight: 700; letter-spacing: .06em; line-height: 1.15; }
 .doc__h::after { /* the ===== underline, exactly as long as the word */
@@ -378,4 +467,4 @@ kbd {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
-@media print { .bar, .climb, .shaft, .menu__car { display: none !important; } body { background: #fff; color: #000; } }
+@media print { .bar, .climb, .shaft, .menu__car, .ledge, .boot, .combo { display: none !important; } body { background: #fff; color: #000; } }

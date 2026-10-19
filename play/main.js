@@ -45,7 +45,7 @@
     clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, ms || 4200);
   }
   $('toast').addEventListener('pointerdown', (e) => { e.stopPropagation(); $('toast').hidden = true; });
-  function setProgress(f, text) { $('loader-fill').style.width = Math.round(f * 100) + '%'; if (text) $('loader-text').textContent = text; }
+  function setProgress(f, text) { $('loader-fill').style.width = Math.round(f * 100) + '%'; const fl = $('loader-floor'); if (fl) fl.textContent = String(Math.min(100, Math.round(f * 100))).padStart(3, '0'); if (text) $('loader-text').textContent = text; }
   function fail(msg) { $('loader-text').textContent = msg; $('loader-fill').style.background = '#ff6a6a'; }
 
   // ------------------------------------------------------------ module + data

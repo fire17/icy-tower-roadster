@@ -20,8 +20,7 @@
     'edition': 'מהדורת רודסטר',
     'pitch': 'למגדל של הרולד יש מטפס חדש: הטסלה רודסטר של 2026. הוא עושה סלטות אחוריות במעלה הקומות על מדחפי גז קר, שיורים בדיוק מהמקומות שבהם נמצאות הפיות של המכונית האמיתית.',
     'menu.play': 'לשחק בדפדפן', 'menu.mac': 'הורדה למק', 'menu.instructions': 'הוראות', 'menu.roadster': 'הרודסטר', 'menu.credits': 'קרדיטים',
-    'sound': '[ &#9654; לצפייה עם סאונד, 34 שנ׳ ]',
-    'video.caption': 'קליפ משחק של 34 שניות, מוקלט מאפליקציית המק.',
+    'sound': '[ &#9654; לצפייה עם סאונד ]',
     'general.h': 'כללי',
     'general.meta': 'בחינם · בלי פרסומות · בלי חשבונות · בלי מעקב',
     'general.p1': 'אייסי טאוור הוא משחק חינמי משנת 2001 של יוהאן פייץ מ-Free Lunch Design. מטפסים על מגדל בגובה אינסופי, וככל שרצים מהר יותר קופצים גבוה יותר. מהדורת המעריצים הזו שומרת על המשחק הזה ומוסיפה מטפס חדש אחד: הטסלה רודסטר מהדור השני, שטסלה הציגה עפה ב-15 באוקטובר 2026.',
@@ -102,6 +101,12 @@
     'install.else.h': 'כל השאר',
     'final.win': '[ הורדה לווינדוס ]',
     'disclaimer': 'שחזור של מעריצים — לא קשור ל-<bdi>Free Lunch Design</bdi> ולא מאושר על ידה. <bdi>Icy Tower</bdi> הוא © <bdi>Johan Peitz / Free Lunch Design</bdi>.',
+    'char.roadster': 'טסלה רודסטר', 'char.harold': 'הרולד ההומבוי', 'char.dave': 'דיסקו דייב', 'char.template': 'התבנית',
+    'char.roadster.blurb': 'הרודסטר של 2026. עושה סלטות במעלה המגדל על סילוני גז קר שיורים ממיקומי הפיות האמיתיים.',
+    'char.harold.blurb': 'המטפס המקורי מאז 2001. כובע גרב, בלי מדחפים, רק רגליים.',
+    'char.dave.blurb': 'אפרו, חליפה ורודה, מכנסיים לבנים מתרחבים. המטפס השני של המשחק המקורי, עדיין רוקד במעלה הקומות.',
+    'char.template.blurb': 'קווי המתאר הריקים שהמשחק המקורי צירף, כדי שכל אחד יוכל לצייר מטפס משלו.',
+    'shaft.aria': 'ארבעת המטפסים', 'shaft.prev': 'המטפס הקודם', 'shaft.next': 'המטפס הבא',
     'foot.releases': 'גרסאות', 'foot.top': 'חזרה לקומה 0'
   };
   var EN = {};
@@ -159,6 +164,12 @@
     items.forEach(function (i) { i.classList.toggle('is-on', i === item); });
     placePointer();
   }
+  function setPointerChar(id) {
+    if (!car || car.getAttribute('data-char') === id) return;
+    car.setAttribute('data-char', id);
+    if (!reduce.matches) { car.classList.remove('is-swap'); void car.offsetWidth; car.classList.add('is-swap'); }
+    placePointer();
+  }
   function placePointer() {
     if (!car) return;
     var on = menu.querySelector('.menu__item.is-on') || items[0];
@@ -178,33 +189,127 @@
     });
   });
 
-  /* ---------------- video ---------------- */
-  var video = document.getElementById('teaser');
-  var shaft = document.querySelector('.shaft');
+  /* ---------------- the shaft: a carousel of the four climbers ---------------- */
+  var shaft = document.getElementById('shaft');
+  var slides = shaft ? Array.prototype.slice.call(shaft.querySelectorAll('.slide')) : [];
+  var dots = shaft ? Array.prototype.slice.call(shaft.querySelectorAll('.shaft__dot')) : [];
   var soundBtn = document.getElementById('sound');
-  var full = false;
-  if (video) {
-    if (reduce.matches) { video.removeAttribute('autoplay'); video.pause(); }
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (es) {
-        es.forEach(function (e) {
-          if (full) return;
-          if (e.isIntersecting && !reduce.matches) { var p = video.play(); if (p && p.catch) p.catch(function () {}); }
-          else video.pause();
-        });
-      }, { threshold: 0.15 }).observe(video);
-    }
+  var DWELL = 7000, cur = 0, timer = null, held = false, inView = true, full = false, userPausedUntil = 0;
+  var CLIPS = {};   /* filled from assets/video/chars/clips.json: { id: { src, poster, sound? } } */
+  function vid(i) { return slides[i] && slides[i].querySelector('.slide__video'); }
+  function posterOnly(i) {
+    var c = CLIPS[slides[i].getAttribute('data-char')], v = vid(i);
+    if (c && c.poster && v && !v.getAttribute('poster')) v.setAttribute('poster', 'assets/video/chars/' + c.poster);
   }
-  if (soundBtn && video) soundBtn.addEventListener('click', function () {
-    full = true;
-    video.pause();
-    video.loop = false; video.muted = false; video.controls = true;
-    video.setAttribute('poster', 'assets/video/poster.jpg');
-    video.src = 'assets/video/roadster-gameplay.mp4';
-    video.load();
-    shaft.classList.add('is-full');
-    var p = video.play(); if (p && p.catch) p.catch(function () {});
-    video.focus({ preventScroll: true });
+  function loadClip(i) {
+    var sl = slides[i], v = vid(i), c = CLIPS[sl.getAttribute('data-char')];
+    if (!c || !v || v.getAttribute('src')) return;
+    if (c.poster) { v.setAttribute('poster', 'assets/video/chars/' + c.poster); sl.classList.add('has-video'); }
+    v.addEventListener('loadeddata', function () { sl.classList.add('has-video'); }, { once: true });
+    v.addEventListener('loadedmetadata', function () {
+      if (v.videoWidth) shaft.style.setProperty('--ar', v.videoWidth + ' / ' + v.videoHeight);
+    }, { once: true });
+    v.addEventListener('error', function () { sl.classList.remove('has-video'); }, { once: true });
+    v.src = 'assets/video/chars/' + c.src;
+  }
+  function playCur() {
+    slides.forEach(function (sl, i) {
+      var v = vid(i); if (!v || !v.getAttribute('src')) return;
+      if (i === cur && inView && !reduce.matches && !full) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+      else if (!(full && i === cur)) v.pause();
+    });
+  }
+  function show(i, fromUser) {
+    if (!slides.length) return;
+    cur = (i + slides.length) % slides.length;
+    var id = slides[cur].getAttribute('data-char');
+    slides.forEach(function (sl, k) { var on = k === cur; sl.classList.toggle('is-on', on); if (on) sl.removeAttribute('aria-hidden'); else sl.setAttribute('aria-hidden', 'true'); });
+    dots.forEach(function (b, k) { b.classList.toggle('is-on', k === cur); if (k === cur) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
+    shaft.setAttribute('data-on', id);
+    loadClip(cur); posterOnly((cur + 1) % slides.length);
+    playCur();
+    setPointerChar(id);
+    if (fromUser) userPausedUntil = Date.now() + 15000;
+    restartMeter();
+  }
+  function restartMeter() {
+    clearTimeout(timer);
+    var auto = !reduce.matches && !full && inView && !document.hidden;
+    shaft.classList.remove('is-auto'); void shaft.offsetWidth;
+    if (!auto) return;
+    var wait = Math.max(DWELL, userPausedUntil - Date.now());
+    shaft.style.setProperty('--dwell', wait + 'ms');
+    shaft.classList.add('is-auto');
+    timer = setTimeout(function tick() { if (held) { timer = setTimeout(tick, 400); return; } show(cur + 1); }, wait);
+  }
+  function hold(h) { held = h; shaft.classList.toggle('is-held', h); }
+  if (shaft) {
+    document.getElementById('prev').addEventListener('click', function () { show(cur - 1, true); });
+    document.getElementById('next').addEventListener('click', function () { show(cur + 1, true); });
+    dots.forEach(function (b) { b.addEventListener('click', function () { show(+b.getAttribute('data-go'), true); }); });
+    shaft.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') hold(true); });
+    shaft.addEventListener('pointerleave', function () { hold(false); });
+    shaft.addEventListener('focusin', function () { hold(true); });
+    shaft.addEventListener('focusout', function () { hold(false); });
+    shaft.addEventListener('keydown', function (e) {
+      var rtl = d.getAttribute('dir') === 'rtl';
+      if (e.key === 'ArrowRight') { show(cur + (rtl ? -1 : 1), true); e.preventDefault(); }
+      if (e.key === 'ArrowLeft') { show(cur + (rtl ? 1 : -1), true); e.preventDefault(); }
+    });
+    var sx = null;   /* swipe between climbers on touch */
+    shaft.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
+    shaft.addEventListener('touchend', function (e) {
+      if (sx == null) return; var dx = e.changedTouches[0].clientX - sx; sx = null;
+      if (Math.abs(dx) > 40) show(cur + ((dx < 0) !== (d.getAttribute('dir') === 'rtl') ? 1 : -1), true);
+    }, { passive: true });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) {
+      inView = es[0].isIntersecting; playCur(); restartMeter();
+    }, { threshold: 0.2 }).observe(shaft);
+    document.addEventListener('visibilitychange', function () { playCur(); restartMeter(); });
+    if (reduce.addEventListener) reduce.addEventListener('change', function () { playCur(); restartMeter(); });
+    fetch('assets/video/chars/clips.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : {}; })
+      .catch(function () { return {}; }).then(function (j) { CLIPS = j || {}; show(cur); });
+  }
+  if (soundBtn && shaft) soundBtn.addEventListener('click', function () {
+    var v = vid(0), c = CLIPS.roadster || {};
+    if (!c.sound) return;
+    full = true; clearTimeout(timer); shaft.classList.remove('is-auto'); shaft.classList.add('is-full');
+    show(0); full = true;
+    v.loop = false; v.muted = false; v.controls = true;
+    v.src = 'assets/video/chars/' + c.sound;
+    slides[0].classList.add('has-video');
+    v.addEventListener('loadedmetadata', function () { if (v.videoWidth) shaft.style.setProperty('--ar', v.videoWidth + ' / ' + v.videoHeight); }, { once: true });
+    v.load(); var p = v.play(); if (p && p.catch) p.catch(function () {});
+    v.focus({ preventScroll: true });
+  });
+
+  /* ---------------- ledges: climbers stroll only while on screen ---------------- */
+  var ledges = document.querySelectorAll('.ledge');
+  if ('IntersectionObserver' in window) {
+    var lio = new IntersectionObserver(function (es) { es.forEach(function (e) { e.target.classList.toggle('is-live', e.isIntersecting); }); }, { rootMargin: '40px' });
+    Array.prototype.forEach.call(ledges, function (l) { lio.observe(l); });
+  }
+
+  /* ---------------- combo bursts on hover ---------------- */
+  var LADDER = ['GOOD!', 'SWEET!', 'GREAT!', 'SUPER!', 'WOW!', 'AMAZING!', 'EXTREME!', 'FANTASTIC!', 'SPLENDID!', 'NO WAY!'];
+  var combo = 0, lastHit = 0, lastEl = null;
+  function burst(el) {
+    if (reduce.matches) return;
+    var now = Date.now();
+    if (el === lastEl && now - lastHit < 700) return;
+    combo = now - lastHit < 1600 ? Math.min(combo + 1, LADDER.length - 1) : 0;
+    lastHit = now; lastEl = el;
+    var r = el.getBoundingClientRect(), b = document.createElement('span');
+    b.className = 'combo'; b.textContent = LADDER[combo];
+    b.style.setProperty('--cs', (1.35 + combo * 0.12).toFixed(2) + 'rem');
+    var x = d.getAttribute('dir') === 'rtl' ? r.left + 24 : r.right - 24;
+    b.style.left = Math.min(Math.max(x, 70), window.innerWidth - 70) + 'px';
+    b.style.top = Math.max(r.top - 12, 8) + 'px';
+    document.body.appendChild(b);
+    setTimeout(function () { b.remove(); }, 1000);
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.menu__item, .block, .parity a'), function (el) {
+    el.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') burst(el); });
   });
 
   /* ---------------- the climb ---------------- */
@@ -268,6 +373,30 @@
     store.set('it-lang', next); applyLang(next);
   });
   if (mqLight.addEventListener) mqLight.addEventListener('change', syncThemeUI);
+
+  /* ---------------- boot: PRESS START (once per visit; any key or tap skips) ---------------- */
+  (function boot() {
+    var el = document.getElementById('boot');
+    if (!el || !d.classList.contains('boot-on')) return;
+    try { sessionStorage.setItem('it-boot', '1'); } catch (e) {}
+    var num = document.getElementById('boot-floor'), t0 = Date.now(), loaded = document.readyState === 'complete', done = false, f = 0;
+    window.addEventListener('load', function () { loaded = true; });
+    function finish() {
+      if (done) return; done = true;
+      el.classList.add('is-out');
+      setTimeout(function () { d.classList.remove('boot-on'); }, 380);
+      window.removeEventListener('keydown', finish); window.removeEventListener('pointerdown', finish);
+    }
+    window.addEventListener('keydown', finish); window.addEventListener('pointerdown', finish);
+    (function step() {
+      if (done) return;
+      var age = Date.now() - t0, cap = (loaded || age > 2200) ? 100 : 80;
+      f = Math.min(cap, f + (cap === 100 ? 7 : 3));
+      num.textContent = ('00' + f).slice(-3);
+      if (f >= 100) { el.classList.add('is-ready'); setTimeout(finish, 650); return; }
+      setTimeout(step, 28);
+    })();
+  })();
 
   applyLang(currentLang());
   syncThemeUI();
