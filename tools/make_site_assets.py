@@ -130,9 +130,14 @@ def portraits(assets, out):
         return res
     print('portrait dave', strip(head('disco_dave', ['001', '010', '011'], 7), 'dave'))
     print('portrait template', strip(head('template', ['001', '010', '011'], 7), 'template'))
-    rd = assets / 'custom_characters/tesla_roadster/frames'
-    car = [frame(next(rd.glob(k + '_*.png'))) for k in ('000', '009', '010')]
-    print('portrait roadster', strip([c.resize((c.width * 3, c.height * 3), Image.NEAREST) for c in car], 'roadster'))
+    # Roadster: nose-up launch angles from its own 64-angle flip atlas (72x72 cells), 4x
+    atlas = Image.open(assets / 'custom_characters/tesla_roadster/rot/rot.png').convert('RGBA')
+    cells = [atlas.crop((0, k * 72, 72, k * 72 + 72)) for k in (5, 4, 6)]
+    box = cells[0].getbbox()
+    for c in cells[1:]:
+        b = c.getbbox(); box = (min(box[0], b[0]), min(box[1], b[1]), max(box[2], b[2]), max(box[3], b[3]))
+    car = [c.crop(box).resize(((box[2] - box[0]) * 4, (box[3] - box[1]) * 4), Image.NEAREST) for c in cells]
+    print('portrait roadster', strip(car, 'roadster'))
 
 
 def main():

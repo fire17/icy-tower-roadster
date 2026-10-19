@@ -228,13 +228,13 @@ html:not(.js) .menu { padding-inline-start: 0; }
 .portrait[data-ed="harold"]   { --psheet: url("../img/game/portrait-harold.png"); --pw: 208; --ph: 265; image-rendering: auto; }
 .portrait[data-ed="dave"]     { --psheet: url("../img/game/portrait-dave.png"); }
 .portrait[data-ed="template"] { --psheet: url("../img/game/portrait-template.png"); }
-.portrait[data-ed="roadster"] { --psheet: url("../img/game/portrait-roadster.png"); --pw: 192; --ph: 78; bottom: calc(20px + 38px * var(--ps)); }
+.portrait[data-ed="roadster"] { --psheet: url("../img/game/portrait-roadster.png"); --pw: 244; --ph: 144; bottom: calc(20px + 30px * var(--ps)); }
 [dir="rtl"] .portrait { transform: scaleX(-1); }
 .portrait[data-ed="roadster"]::after { /* it hovers on its lift jets: a cold-gas cloud under the wheels */
-  content: ""; position: absolute; left: 6%; right: 6%; top: 88%; height: calc(38px * var(--ps) + 6px);
-  background: radial-gradient(ellipse 30% 70% at 28% 0, rgb(var(--puff) / .75), transparent 70%),
-              radial-gradient(ellipse 30% 70% at 72% 0, rgb(var(--puff) / .75), transparent 70%),
-              radial-gradient(ellipse 60% 50% at 50% 100%, rgb(var(--puff) / .45), transparent 70%); }
+  content: ""; position: absolute; z-index: -1; left: -4%; right: 30%; top: 70%; height: calc(52px * var(--ps) + 8px);
+  background: radial-gradient(ellipse 26% 60% at 22% 30%, rgb(var(--puff) / .8), transparent 70%),
+              radial-gradient(ellipse 22% 55% at 58% 8%, rgb(var(--puff) / .7), transparent 70%),
+              radial-gradient(ellipse 70% 45% at 40% 100%, rgb(var(--puff) / .45), transparent 72%); }
 @keyframes face { 0%, 78% { background-position-x: 0; } 80%, 88% { background-position-x: calc(var(--pw) * var(--ps) * -1px); }
   90%, 97% { background-position-x: calc(var(--pw) * var(--ps) * -2px); } 100% { background-position-x: 0; } }
 /* the swap: the tower shakes, then the new floor scrolls in from above */
