@@ -397,19 +397,13 @@
   function faceAt(tick) {
     return { bob: fixedRound(COS[(tick * 10 - 128) & 511] * 10) + 10, deg: COS[(tick * 6 - 128) & 511] * 5 / 65536 * 360 / 256 };
   }
-  var mtick = 0, mface = 0, acc = 0, lastT = 0, headRaf = 0, headVisible = true, wall = document.querySelector('.edition__wall');
+  var mtick = 0, mface = 0, acc = 0, lastT = 0, headRaf = 0, headVisible = true;
   var freezeAt = /[?&]facetick=(\d+)/.exec(location.search);   /* test hook: freeze at a given tick */
   function paintHead() {
     var p = document.querySelector('.portrait.is-on'); if (!p) return;
     var ps = parseFloat(getComputedStyle(p.parentNode.parentNode).getPropertyValue('--ps')) || 1, f = faceAt(mtick);
     p.style.transform = 'translateY(' + ((f.bob - 20) * ps).toFixed(2) + 'px) rotate(' + f.deg.toFixed(3) + 'deg)' + (d.getAttribute('dir') === 'rtl' ? ' scaleX(-1)' : '');
     p.style.setProperty('--fr', mface);
-    /* it_original_menu_background_transform: source_x = round(cos(t)*160)+160, source_y = round(cos(t - 90deg)*120)+120,
-       t advancing one Allegro unit (1/256 turn) per tick; our wall tile is drawn at half that pan, 2x zoom */
-    if (wall) {
-      var sx = fixedRound(COS[(mtick * 2) & 511] * 160) + 160, sy = fixedRound(COS[(mtick * 2 - 128) & 511] * 120) + 120;
-      wall.style.setProperty('--wx', (-sx / 2) + 'px'); wall.style.setProperty('--wy', (-sy / 2) + 'px');
-    }
   }
   function headLoop(now) {
     headRaf = 0;
