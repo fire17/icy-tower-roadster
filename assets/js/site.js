@@ -17,8 +17,6 @@
     'lang.label': 'EN', 'lang.aria': 'English',
     'presents': 'fire17 וחברים מציגים מהדורת מעריצים של',
     'h1': 'אייסי טאוור: מהדורת רודסטר',
-    'edition': 'מהדורת רודסטר',
-    'pitch': 'למגדל של הרולד יש מטפס חדש: הטסלה רודסטר של 2026. הוא עושה סלטות אחוריות במעלה הקומות על מדחפי גז קר, שיורים בדיוק מהמקומות שבהם נמצאות הפיות של המכונית האמיתית.',
     'menu.play': 'לשחק בדפדפן', 'menu.mac': 'הורדה למק', 'menu.instructions': 'הוראות', 'menu.roadster': 'הרודסטר', 'menu.credits': 'קרדיטים',
     'sound': '[ &#9654; לצפייה עם סאונד ]',
     'general.h': 'כללי',
@@ -107,6 +105,11 @@
     'char.dave.blurb': 'אפרו, חליפה ורודה, מכנסיים לבנים מתרחבים. המטפס השני של המשחק המקורי, עדיין רוקד במעלה הקומות.',
     'char.template.blurb': 'קווי המתאר הריקים שהמשחק המקורי צירף, כדי שכל אחד יוכל לצייר מטפס משלו.',
     'shaft.aria': 'ארבעת המטפסים', 'shaft.prev': 'המטפס הקודם', 'shaft.next': 'המטפס הבא',
+    'ed.harold': 'מהדורה קלאסית', 'ed.dave': 'מהדורת דיסקו דייב', 'ed.roadster': 'מהדורת רודסטר', 'ed.template': 'מהדורת התבנית',
+    'pitch.harold': 'הרולד ההומבוי, עם כובע הגרב משוך על העיניים, מטפס על המגדל הזה מאז 2001. המגדל בגובה אינסופי, וככל שרצים מהר יותר קופצים גבוה יותר.',
+    'pitch.dave': 'דיסקו דייב עולה לרחבה: אפרו, חליפה ורודה, מכנסיים לבנים מתרחבים. אותו מגדל ואותה פיזיקה, עם יותר סטייל בכל קפיצה.',
+    'pitch.roadster': 'למגדל של הרולד יש מטפס חדש: הטסלה רודסטר של 2026. הוא עושה סלטות אחוריות במעלה הקומות על מדחפי גז קר, שיורים בדיוק מהמקומות שבהם נמצאות הפיות של המכונית האמיתית.',
+    'pitch.template': 'קווי המתאר הריקים שהמשחק המקורי צירף, כדי שכל אחד יוכל לצייר מטפס משלו. הביאו את הפיקסלים שלכם.',
     'foot.releases': 'גרסאות', 'foot.top': 'חזרה לקומה 0'
   };
   var EN = {};
@@ -194,7 +197,7 @@
   var slides = shaft ? Array.prototype.slice.call(shaft.querySelectorAll('.slide')) : [];
   var dots = shaft ? Array.prototype.slice.call(shaft.querySelectorAll('.shaft__dot')) : [];
   var soundBtn = document.getElementById('sound');
-  var DWELL = 7000, cur = 0, timer = null, held = false, inView = true, full = false, userPausedUntil = 0;
+  var DWELL = 10000, cur = 0, timer = null, held = false, inView = true, full = false, userPausedUntil = 0;
   var CLIPS = {};   /* filled from assets/video/chars/clips.json: { id: { src, poster, sound? } } */
   function vid(i) { return slides[i] && slides[i].querySelector('.slide__video'); }
   function posterOnly(i) {
@@ -219,6 +222,12 @@
       else if (!(full && i === cur)) v.pause();
     });
   }
+  var first = true, title = document.querySelector('.title');
+  function setEdition(id, animate) {
+    d.setAttribute('data-edition', id);
+    Array.prototype.forEach.call(document.querySelectorAll('[data-ed]'), function (el) { el.classList.toggle('is-on', el.getAttribute('data-ed') === id); });
+    if (animate && title) { title.classList.remove('is-swap'); void title.offsetWidth; title.classList.add('is-swap'); }
+  }
   function show(i, fromUser) {
     if (!slides.length) return;
     cur = (i + slides.length) % slides.length;
@@ -226,6 +235,8 @@
     slides.forEach(function (sl, k) { var on = k === cur; sl.classList.toggle('is-on', on); if (on) sl.removeAttribute('aria-hidden'); else sl.setAttribute('aria-hidden', 'true'); });
     dots.forEach(function (b, k) { b.classList.toggle('is-on', k === cur); if (k === cur) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
     shaft.setAttribute('data-on', id);
+    setEdition(id, !first && !reduce.matches);
+    first = false;
     loadClip(cur); posterOnly((cur + 1) % slides.length);
     playCur();
     setPointerChar(id);
@@ -271,13 +282,13 @@
       .catch(function () { return {}; }).then(function (j) { CLIPS = j || {}; show(cur); });
   }
   if (soundBtn && shaft) soundBtn.addEventListener('click', function () {
-    var v = vid(0), c = CLIPS.roadster || {};
+    var ri = slides.findIndex(function (sl) { return sl.getAttribute('data-char') === 'roadster'; }), v = vid(ri), c = CLIPS.roadster || {};
     if (!c.sound) return;
     full = true; clearTimeout(timer); shaft.classList.remove('is-auto'); shaft.classList.add('is-full');
-    show(0); full = true;
+    show(ri); full = true;
     v.loop = false; v.muted = false; v.controls = true;
     v.src = 'assets/video/chars/' + c.sound;
-    slides[0].classList.add('has-video');
+    slides[ri].classList.add('has-video');
     v.addEventListener('loadedmetadata', function () { if (v.videoWidth) shaft.style.setProperty('--ar', v.videoWidth + ' / ' + v.videoHeight); }, { once: true });
     v.load(); var p = v.play(); if (p && p.catch) p.catch(function () {});
     v.focus({ preventScroll: true });

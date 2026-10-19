@@ -60,6 +60,8 @@ Tesla showed the flying Roadster on **15 October 2026**. Within three days it wa
 | <kbd>M</kbd> | mute |
 | <kbd>C</kbd> | change climber |
 
+The website rotates through four **editions** every ten seconds: Classic (Harold, with his big title-screen head), Disco Dave, Roadster and Template.
+
 Four climbers: **the Roadster** (the default), **Harold**, **Disco Dave** and **the Template**. Every new game starts on the classic ice floors.
 
 Bounce off the walls to keep your speed. Land two or more floors up to start a combo, and keep doing it before the meter runs dry. Jump fast enough and the car **backflips**.

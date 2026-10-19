@@ -130,7 +130,7 @@ html { scrollbar-color: var(--rule) var(--ground); }
 .banner i { font-style: normal; color: var(--ink-2); opacity: .55; } /* shadow strokes recede; solid letters lead */
 .title__edition {
   display: block; margin-top: 1.1rem; font-weight: 700;
-  font-size: clamp(1rem, 2.6cqi, 1.5rem); letter-spacing: .05em; color: var(--sel);
+  font-size: clamp(.95rem, 2.4cqi, 1.4rem); letter-spacing: .42em; color: var(--sel);
   border-top: 2px solid var(--tail); padding-top: .9rem; width: fit-content; max-width: 100%;
 }
 :root[data-theme="light"] .title__edition { color: var(--sel); }
@@ -187,10 +187,64 @@ html:not(.js) .menu { padding-inline-start: 0; }
 @media (max-width: 899px) {
   .title { grid-template-columns: 1fr; min-height: 0; gap: 0; }
   .title__text { display: contents; }
-  .title__presents { order: 1; } .title__h { order: 2; } .title__pitch { order: 3; }
+  .title__presents { order: 1; } .title__h { order: 2; } .edition { order: 3; }
   .shaft { order: 4; margin-top: 1.8rem; }
   .menu { order: 5; } .parity { order: 7; }
 }
+
+
+/* ---------- editions: Classic (Harold) → Disco Dave → Roadster → Template ---------- */
+@property --sel { syntax: "<color>"; inherits: true; initial-value: #bfe9f5; }
+:root { transition: --sel .7s ease-out; }
+:root[data-edition="harold"]   { --sel: #9cc4ff; }
+:root[data-edition="dave"]     { --sel: #ffb0dc; }
+:root[data-edition="roadster"] { --sel: #bfe9f5; }
+:root[data-edition="template"] { --sel: #9ce8a6; }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"])[data-edition="harold"]   { --sel: #24489a; }
+  :root:not([data-theme="dark"])[data-edition="dave"]     { --sel: #9c2366; }
+  :root:not([data-theme="dark"])[data-edition="roadster"] { --sel: #23265e; }
+  :root:not([data-theme="dark"])[data-edition="template"] { --sel: #1d6a2a; }
+}
+:root[data-theme="light"][data-edition="harold"]   { --sel: #24489a; }
+:root[data-theme="light"][data-edition="dave"]     { --sel: #9c2366; }
+:root[data-theme="light"][data-edition="roadster"] { --sel: #23265e; }
+:root[data-theme="light"][data-edition="template"] { --sel: #1d6a2a; }
+.ed:not(.is-on) { display: none; }
+[lang="he"] .title__edition { letter-spacing: .12em; }
+.edition { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.4rem 1.8rem; align-items: center; margin-top: 1.5rem; --ps: .7143; }
+.edition .title__pitch { margin: 0; }
+.edition__portrait { position: relative; width: calc(208px * var(--ps)); height: calc(265px * var(--ps) + 22px); }
+.edition__portrait::before { /* a spotlight in the edition colour */
+  content: ""; position: absolute; inset: -12% -22% 4%; z-index: 0;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--sel) 30%, transparent), transparent); }
+.edition__portrait::after { /* the ice ledge the climber stands on */
+  content: ""; position: absolute; inset: auto -6px 0; height: 21px;
+  border-style: solid; border-width: 0 12px; border-image: url("../img/game/ice.png") 0 8 fill / 0 12px / 0 round; image-rendering: pixelated; }
+.portrait { --pw: 196; --ph: 224; position: absolute; z-index: 1; left: 50%; bottom: 20px; display: none;
+  width: calc(var(--pw) * var(--ps) * 1px); height: calc(var(--ph) * var(--ps) * 1px); margin-left: calc(var(--pw) * var(--ps) * -.5px);
+  background: var(--psheet) 0 0 / calc(var(--pw) * 3 * var(--ps) * 1px) 100% no-repeat; image-rendering: pixelated; }
+.portrait.is-on { display: block; animation: face 7s steps(1) infinite; }
+.portrait[data-ed="harold"]   { --psheet: url("../img/game/portrait-harold.png"); --pw: 208; --ph: 265; image-rendering: auto; }
+.portrait[data-ed="dave"]     { --psheet: url("../img/game/portrait-dave.png"); }
+.portrait[data-ed="template"] { --psheet: url("../img/game/portrait-template.png"); }
+.portrait[data-ed="roadster"] { --psheet: url("../img/game/portrait-roadster.png"); --pw: 192; --ph: 78; bottom: calc(20px + 38px * var(--ps)); }
+[dir="rtl"] .portrait { transform: scaleX(-1); }
+.portrait[data-ed="roadster"]::after { /* it hovers on its lift jets: a cold-gas cloud under the wheels */
+  content: ""; position: absolute; left: 6%; right: 6%; top: 88%; height: calc(38px * var(--ps) + 6px);
+  background: radial-gradient(ellipse 30% 70% at 28% 0, rgb(var(--puff) / .75), transparent 70%),
+              radial-gradient(ellipse 30% 70% at 72% 0, rgb(var(--puff) / .75), transparent 70%),
+              radial-gradient(ellipse 60% 50% at 50% 100%, rgb(var(--puff) / .45), transparent 70%); }
+@keyframes face { 0%, 78% { background-position-x: 0; } 80%, 88% { background-position-x: calc(var(--pw) * var(--ps) * -1px); }
+  90%, 97% { background-position-x: calc(var(--pw) * var(--ps) * -2px); } 100% { background-position-x: 0; } }
+/* the swap: the tower shakes, then the new floor scrolls in from above */
+.title.is-swap .banner { animation: shake .32s steps(4) 1; }
+.title.is-swap .ed.is-on, .title.is-swap .title__pitch.is-on { animation: wipe .5s steps(7) 1; }
+.title.is-swap .portrait.is-on { animation: drop .55s steps(7) 1, face 7s steps(1) .55s infinite; }
+@keyframes shake { 0% { translate: 0 0; } 25% { translate: -3px 2px; } 50% { translate: 3px -1px; } 75% { translate: -2px -2px; } 100% { translate: 0 0; } }
+@keyframes wipe { from { clip-path: inset(0 0 100% 0); translate: 0 -14px; } to { clip-path: inset(0); translate: 0 0; } }
+@keyframes drop { from { translate: 0 -60px; clip-path: inset(0 0 100% 0); } to { translate: 0 0; clip-path: inset(0); } }
+@media (max-width: 899px) { .edition { --ps: .5714; gap: 1rem 1.2rem; } .edition .title__pitch { font-size: .95rem; } }
 
 /* ---------- sprites: the climbers' own frames, 8 cells (idle, walk x4, jump x3) ---------- */
 .sprite { --s: 1; --f: 0; display: block; width: calc(var(--cw) * var(--s) * 1px); height: calc(var(--ch) * var(--s) * 1px);
@@ -293,9 +347,9 @@ html:not(.js) .menu { padding-inline-start: 0; }
 .boot__tower { position: relative; width: 120px; height: 180px; background: url("../img/game/tower.png") 0 0 / 120px 180px repeat-y;
   image-rendering: pixelated; border-inline: 6px solid #2b2d5a; box-shadow: 0 0 0 1px #0b0b1c, 0 18px 40px -16px #000; animation: climb 1.1s linear infinite; }
 @keyframes climb { to { background-position-y: 180px; } }
-.boot__climber { position: absolute; left: 50%; bottom: 46px; width: 64px; height: 26px; margin-left: -32px;
-  background: url("../img/game/roadster.png") 0 0 / 512px 26px no-repeat; image-rendering: pixelated; animation: boothop .55s ease-in-out infinite alternate; }
-@keyframes boothop { from { translate: 0 0; background-position-x: -320px; } to { translate: 0 -22px; background-position-x: -384px; } }
+.boot__climber { position: absolute; left: 50%; bottom: 46px; width: 30px; height: 52px; margin-left: -15px;
+  background: url("../img/game/harold.png") 0 0 / 240px 52px no-repeat; image-rendering: pixelated; animation: boothop .55s ease-in-out infinite alternate; }
+@keyframes boothop { from { translate: 0 0; background-position-x: -150px; } to { translate: 0 -24px; background-position-x: -180px; } }
 .boot__floor { margin: 0; font-size: .9rem; letter-spacing: .2em; color: #aab3d1; }
 .boot__floor b { color: #e9eef6; font-size: 1.4rem; letter-spacing: .08em; margin-inline-start: .6ch; }
 .boot__press { margin: .2rem 0 0; font-weight: 700; letter-spacing: .3em; font-size: .95rem; color: #bfe9f5; opacity: 0; }

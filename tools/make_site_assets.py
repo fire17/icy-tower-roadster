@@ -107,6 +107,34 @@ def tower(out):
     im.save(out / 'tower.png', optimize=True)
 
 
+def portraits(assets, out):
+    """Edition portraits, one strip of 3 expression frames each:
+    harold = the title screen's own HEROFACE art at 1:1; dave/template = head-and-shoulders
+    crops of their idle frames at 7x; roadster = its idle frame at 3x. Nearest-neighbour only."""
+    def strip(frames, name):
+        cw = max(f.width for f in frames); ch = max(f.height for f in frames)
+        sh = Image.new('RGBA', (cw * len(frames), ch), (0, 0, 0, 0))
+        for i, f in enumerate(frames):
+            sh.paste(f, (i * cw + (cw - f.width) // 2, ch - f.height), f)
+        sh.save(out / f'portrait-{name}.png', optimize=True)
+        return cw, ch
+    data = assets / 'data'
+    print('portrait harold', strip([frame(data / f'HEROFACE00{i}.png') for i in range(3)], 'harold'))
+    def head(d, keys, scale):
+        fs = sorted((assets / d).glob('*.png'))
+        res = []
+        for k in keys:
+            f = frame(next(x for x in fs if x.name.startswith(k + '_')))
+            box = f.getbbox(); f = f.crop((box[0], box[1], box[2], min(box[3], box[1] + 32)))
+            res.append(f.resize((f.width * scale, f.height * scale), Image.NEAREST))
+        return res
+    print('portrait dave', strip(head('disco_dave', ['001', '010', '011'], 7), 'dave'))
+    print('portrait template', strip(head('template', ['001', '010', '011'], 7), 'template'))
+    rd = assets / 'custom_characters/tesla_roadster/frames'
+    car = [frame(next(rd.glob(k + '_*.png'))) for k in ('000', '009', '010')]
+    print('portrait roadster', strip([c.resize((c.width * 3, c.height * 3), Image.NEAREST) for c in car], 'roadster'))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('--assets', type=Path, default=HERE.parent.parent / 'game' / 'assets')
@@ -115,7 +143,7 @@ def main():
     a.out.mkdir(parents=True, exist_ok=True)
     for cid in CHARS:
         print(cid, 'cell %dx%d' % sheet(a.assets, cid, a.out))
-    ice(a.out); bricks(a.out); tower(a.out)
+    ice(a.out); bricks(a.out); tower(a.out); portraits(a.assets, a.out)
     for f in sorted(a.out.iterdir()):
         print(f.name, f.stat().st_size, 'bytes')
 
