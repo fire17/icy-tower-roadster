@@ -3,6 +3,7 @@
 (function () {
   'use strict';
   var d = document.documentElement;
+  if (/[?&]touch=1\b/.test(location.search) || (window.matchMedia && matchMedia('(hover: none) and (pointer: coarse)').matches)) d.classList.add('touch');
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   var store = {
     get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
@@ -264,8 +265,18 @@
   }
   function setMuted(m) { muted = m; logA(m ? 'muted' : 'unmuted'); applyLevel(); }
   if (volBox) {
-    volBtn.addEventListener('click', function () { unlock(); setMuted(!muted); });
-    volSl.addEventListener('input', function () { unlock(); vol = (+volSl.value) / 100; if (vol && muted) muted = false; applyLevel(); });
+    var phoneVol = window.matchMedia('(max-width: 600px)'), volTimer = 0;
+    function volOpen(o) {   /* phone popover: closes 3 s after the last touch */
+      volBox.classList.toggle('is-open', o); clearTimeout(volTimer);
+      if (o) volTimer = setTimeout(function () { volOpen(false); }, 3000);
+    }
+    volBtn.addEventListener('click', function () {
+      unlock();
+      if (phoneVol.matches && !volBox.classList.contains('is-open')) { volOpen(true); return; }   /* first tap opens */
+      setMuted(!muted); if (phoneVol.matches) volOpen(true);
+    });
+    volSl.addEventListener('input', function () { unlock(); vol = (+volSl.value) / 100; if (vol && muted) muted = false; applyLevel(); if (phoneVol.matches) volOpen(true); });
+    document.addEventListener('pointerdown', function (e) { if (!volBox.contains(e.target)) volOpen(false); });
     volUI();
   }
   /* the first key or tap anywhere (the PRESS START press, normally) unlocks audio */
