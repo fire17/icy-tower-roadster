@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Icy Tower: Roadster Edition</title>
+<meta name="description" content="A free fan edition of Free Lunch Design's Icy Tower, with the 2026 Tesla Roadster as the climber: it backflips up the tower on cold-gas thrusters that fire from where the real nozzles are. Play in your browser or download for Mac and Windows.">
+<meta name="theme-color" content="#13142a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f3f6fa" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="dark light">
+<link rel="canonical" href="https://icytower.akeyo.io/">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Icy Tower: Roadster Edition">
+<meta property="og:title" content="Icy Tower: Roadster Edition">
+<meta property="og:description" content="The 2026 Roadster backflips up Harold's tower on cold-gas thrusters. Free fan edition. Play in the browser or download for Mac and Windows.">
+<meta property="og:url" content="https://icytower.akeyo.io/">
+<meta property="og:image" content="https://icytower.akeyo.io/assets/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Pixel-art white Roadster backflipping up the icy tower, jets of cold gas under it, with the title Icy Tower: Roadster Edition">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="he_IL">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Icy Tower: Roadster Edition">
+<meta name="twitter:description" content="The 2026 Roadster backflips up Harold's tower on cold-gas thrusters. Free fan edition.">
+<meta name="twitter:image" content="https://icytower.akeyo.io/assets/img/og.png">
+<link rel="preload" href="assets/fonts/cousine-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/cousine-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/site.css?v=7">
+<script>
+  /* Theme + language before first paint, so nothing flashes. */
+  (function () {
+    var d = document.documentElement, t = null, l = null;
+    try { t = localStorage.getItem('it-theme'); l = localStorage.getItem('it-lang'); } catch (e) {}
+    var q = /[?&]lang=(he|en)\b/.exec(location.search);
+    if (q) l = q[1];
+    if (!l && /^he\b/i.test(navigator.language || '')) l = 'he';
+    if (t === 'light' || t === 'dark') d.setAttribute('data-theme', t);
+    if (l === 'he') { d.setAttribute('lang', 'he'); d.setAttribute('dir', 'rtl'); }
+    d.classList.add('js');
+  })();
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"VideoGame","name":"Icy Tower: Roadster Edition","url":"https://icytower.akeyo.io/","description":"Free, non-commercial fan edition of Icy Tower 1.3 by Free Lunch Design, with the 2026 Tesla Roadster as a playable character.","gamePlatform":["macOS","Windows","Web browser"],"isBasedOn":{"@type":"VideoGame","name":"Icy Tower","author":{"@type":"Person","name":"Johan Peitz"},"publisher":{"@type":"Organization","name":"Free Lunch Design","url":"https://www.freelunchdesign.com"}},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+</head>
+<body>
+<a class="skip" href="#general" data-i18n="skip">Skip to the readme</a>
+
+<header class="bar">
+  <a class="bar__brand" href="#top" aria-label="Icy Tower: Roadster Edition, top of page">
+    <img src="assets/img/car.png" width="61" height="21" alt="" class="px">
+    <span>ICY&nbsp;TOWER<span class="bar__dim">.TXT</span></span>
+  </a>
+  <nav class="bar__nav" aria-label="Sections">
+    <a href="#playing" data-i18n="nav.controls">Controls</a>
+    <a href="#installing" data-i18n="nav.install">Install</a>
+    <a href="#roadster" data-i18n="nav.roadster">The Roadster</a>
+    <a href="#credits" data-i18n="nav.credits">Credits</a>
+  </nav>
+  <div class="bar__tools">
+    <button type="button" class="tool" id="lang" aria-label="עברית" data-i18n-aria="lang.aria"><span data-i18n="lang.label">עב</span></button>
+    <button type="button" class="tool" id="theme" aria-label="Switch to light theme"><span class="tool__dark">[&#9679;]</span><span class="tool__light">[&#9675;]</span></button>
+  </div>
+</header>
+
+<main id="top">
+  <p class="disclaimer" data-i18n="disclaimer">Fan recreation — not affiliated with or endorsed by Free Lunch Design. Icy Tower is © Johan Peitz / Free Lunch Design.</p>
+
+  <!-- ===================== TITLE SCREEN ===================== -->
+  <section class="title" aria-labelledby="title-h">
+    <div class="title__text">
+      <p class="title__presents" data-i18n="presents">fire17 &amp; friends present a fan edition of</p>
+      <h1 id="title-h" class="title__h">
+        <span class="sr-only" data-i18n="h1">Icy Tower: Roadster Edition</span>
+<pre class="banner" aria-hidden="true">██<i>╗ </i>██████<i>╗</i>██<i>╗   </i>██<i>╗</i>
+██<i>║</i>██<i>╔════╝╚</i>██<i>╗ </i>██<i>╔╝</i>
+██<i>║</i>██<i>║      ╚</i>████<i>╔╝</i>
+██<i>║</i>██<i>║       ╚</i>██<i>╔╝</i>
+██<i>║╚</i>██████<i>╗   </i>██<i>║</i>
+<i>╚═╝ ╚═════╝   ╚═╝</i>
+████████<i>╗ </i>██████<i>╗ </i>██<i>╗    </i>██<i>╗</i>███████<i>╗</i>██████<i>╗</i>
+<i>╚══</i>██<i>╔══╝</i>██<i>╔═══</i>██<i>╗</i>██<i>║    </i>██<i>║</i>██<i>╔════╝</i>██<i>╔══</i>██<i>╗</i>
+   ██<i>║   </i>██<i>║   </i>██<i>║</i>██<i>║ </i>█<i>╗ </i>██<i>║</i>█████<i>╗  </i>██████<i>╔╝</i>
+   ██<i>║   </i>██<i>║   </i>██<i>║</i>██<i>║</i>███<i>╗</i>██<i>║</i>██<i>╔══╝  </i>██<i>╔══</i>██<i>╗</i>
+   ██<i>║   ╚</i>██████<i>╔╝╚</i>███<i>╔</i>███<i>╔╝</i>███████<i>╗</i>██<i>║  </i>██<i>║</i>
+<i>   ╚═╝    ╚═════╝  ╚══╝╚══╝ ╚══════╝╚═╝  ╚═╝</i></pre>
+        <span class="title__edition" aria-hidden="true" data-i18n="edition">R O A D S T E R &nbsp; E D I T I O N</span>
+      </h1>
+      <p class="title__pitch" data-i18n="pitch">Harold's tower has a new climber: the 2026 Tesla Roadster. It backflips up the floors on cold-gas thrusters that fire from where the real car's nozzles are.</p>
+
+      <nav class="menu" aria-label="Start">
+        <ul>
+          <li><a class="menu__item is-on" href="play/"><span data-i18n="menu.play">PLAY IN BROWSER</span><small class="menu__sub" data-i18n="menu.play.sub">any device · Linux, Chromebook, phones · nothing to install</small></a></li>
+          <li><a class="menu__item" href="https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-mac.zip"><span data-i18n="menu.mac">DOWNLOAD FOR MAC</span><small class="menu__sub" data-i18n="menu.mac.sub">Apple Silicon · macOS 13+ · first time: right-click → Open</small></a></li>
+          <li><a class="menu__item" href="https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-windows.zip"><span data-i18n="menu.win">DOWNLOAD FOR WINDOWS</span><small class="menu__sub" data-i18n="menu.win.sub">Windows 10/11 64-bit · SmartScreen: More info → Run anyway</small></a></li>
+          <li><a class="menu__item" href="#playing" data-i18n="menu.instructions">INSTRUCTIONS</a></li>
+          <li><a class="menu__item" href="#roadster" data-i18n="menu.roadster">THE ROADSTER</a></li>
+          <li><a class="menu__item" href="#credits" data-i18n="menu.credits">CREDITS</a></li>
+        </ul>
+        <img class="menu__car px" src="assets/img/car.png" width="61" height="21" alt="">
+      </nav>
+            <p class="parity"><a href="#faithful"><span class="parity__n">16/16</span> <span data-i18n="parity">original replays · Mac = Windows = Web · 145,141 tick hashes identical</span></a></p>
+    </div>
+
+    <figure class="shaft">
+      <video class="shaft__video" id="teaser" autoplay muted loop playsinline preload="metadata" poster="assets/video/poster.jpg" width="540" height="810" aria-label="Gameplay: the Roadster jumping and backflipping up the tower, jets of white gas under it">
+        <source src="assets/video/teaser.mp4" type="video/mp4">
+      </video>
+      <button type="button" class="shaft__sound" id="sound" data-i18n="sound">[ &#9654; WATCH 34s WITH SOUND ]</button>
+      <figcaption class="sr-only" data-i18n="video.caption">A 34-second gameplay clip recorded from the Mac app.</figcaption>
+    </figure>
+  </section>
+
+  <div class="rule" aria-hidden="true"></div>
+
+  <!-- ===================== GENERAL ===================== -->
+  <section class="doc" id="general" data-floor="10" aria-labelledby="general-h">
+    <h2 id="general-h" class="doc__h" data-i18n="general.h">GENERAL</h2>
+    <p class="doc__meta" data-i18n="general.meta">Free · no ads · no accounts · no tracking</p>
+    <div class="doc__body">
+      <p data-i18n="general.p1">Icy Tower is a freeware game from 2001 by Johan Peitz of Free Lunch Design. You climb a tower of infinite height, and the faster you run, the higher you jump. This fan edition keeps that game and adds one new climber: the second-generation Tesla Roadster that Tesla showed flying on 15 October 2026.</p>
+      <p data-i18n="general.p2">Underneath is a native rebuild of Icy Tower 1.3.1, transcribed from the original routine by routine, so the jumps feel the way you remember them. It runs on Mac, on Windows, and in your browser.</p>
+    </div>
+  </section>
+
+  <!-- ===================== 1:1 FAITHFUL ===================== -->
+  <section class="doc" id="faithful" data-floor="15" aria-labelledby="faithful-h">
+    <h2 id="faithful-h" class="doc__h" data-i18n="faithful.h">1:1 FAITHFUL</h2>
+    <p class="doc__meta" data-i18n="faithful.meta">One C game core on every platform · checked against the original's own replays</p>
+    <div class="doc__body">
+      <p data-i18n="faithful.p1">Every version runs the same C game core, transcribed from Icy Tower 1.3.1. The test is the 16 replays that ship with the original game. A replay records what the player pressed, not where they ended up, so if a single physics rule were off by a hair, the run would drift and finish somewhere else.</p>
+      <dl class="proof">
+        <div><dt>MAC</dt><dd><b>16/16</b> <span data-i18n="faithful.mac">original replays reproduce their recorded score, floor and combo.</span></dd></div>
+        <div><dt>WINDOWS</dt><dd><b>16/16</b> <span data-i18n="faithful.win">original replays reproduce, tick for tick.</span></dd></div>
+        <div><dt>WEB</dt><dd><b>16/16</b> <span data-i18n="faithful.web">original replays reproduce, tick for tick.</span></dd></div>
+        <div class="proof__all"><dt data-i18n="faithful.all.h">ALL THREE</dt><dd><b>145,141</b> <span data-i18n="faithful.all">per-tick full-state hashes, identical on Mac, Windows and Web. Combined chain:</span> <code>ce0ab7382a9dd329</code></dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ===================== PLAYING ===================== -->
+  <section class="doc" id="playing" data-floor="20" aria-labelledby="playing-h">
+    <h2 id="playing-h" class="doc__h" data-i18n="playing.h">PLAYING</h2>
+    <p class="doc__meta" data-i18n="playing.meta">Keyboard · the same keys as 2001</p>
+    <div class="doc__body">
+      <dl class="keys">
+        <div><dt><kbd>&larr;</kbd> <kbd>&rarr;</kbd></dt><dd data-i18n="keys.run">run left / right</dd></div>
+        <div><dt><kbd class="kbd--wide">SPACE</kbd></dt><dd data-i18n="keys.jump">jump</dd></div>
+        <div><dt><kbd>ESC</kbd></dt><dd data-i18n="keys.pause">pause</dd></div>
+        <div><dt><kbd>R</kbd></dt><dd data-i18n="keys.restart">restart</dd></div>
+        <div><dt><kbd>M</kbd></dt><dd data-i18n="keys.mute">mute</dd></div>
+        <div><dt><kbd>C</kbd></dt><dd data-i18n="keys.char">change climber</dd></div>
+      </dl>
+      <p class="climbers" data-i18n="climbers">Four climbers: <b>the Roadster</b> (the default), <b>Harold</b>, <b>Disco Dave</b> and <b>the Template</b>. Every new game starts on the classic ice floors.</p>
+      <ol class="rules">
+        <li data-i18n="rules.1">The Roadster keeps accelerating while you hold a direction. The faster it runs, the higher and longer it jumps.</li>
+        <li data-i18n="rules.2">Bounce off the walls: you turn around and keep most of your speed.</li>
+        <li data-i18n="rules.3">Land at least two floors above where you jumped to start a combo, then keep doing it before the meter on the left runs dry.</li>
+        <li data-i18n="rules.4">Jump fast enough and the car backflips. The thrusters fire through the whole flip.</li>
+        <li data-i18n="rules.5">Every 30 seconds the clock rings and the tower scrolls faster. Don't fall off the bottom.</li>
+      </ol>
+      <p class="rewards" aria-label="Combo rewards: Good, Sweet, Great, Wow, Amazing, Extreme, and a few more">
+        <span>GOOD</span> <span>SWEET</span> <span>GREAT</span> <span>WOW</span> <span>AMAZING</span> <span>EXTREME</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== INSTALLING ===================== -->
+  <section class="doc" id="installing" data-floor="30" aria-labelledby="installing-h">
+    <h2 id="installing-h" class="doc__h" data-i18n="install.h">INSTALLING</h2>
+    <p class="doc__meta" data-i18n="install.meta">Free · Mac and Windows apps · everything else plays in the browser</p>
+    <div class="doc__body">
+      <h3 class="doc__h3 doc__h3--first" data-i18n="install.mac.h">MAC</h3>
+      <p class="req" data-i18n="install.mac.req">Apple Silicon (M1 or newer) · macOS 13 Ventura or newer</p>
+      <ol class="steps">
+        <li><span data-i18n="install.1">Download</span> <a href="https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-mac.zip"><code>Icy-Tower-Roadster-mac.zip</code></a><span data-i18n="install.1b"> and double-click it to unzip.</span></li>
+        <li data-i18n="install.2">Drag the app into your Applications folder.</li>
+        <li data-i18n="install.3">The first time only: right-click the app (or Control-click), choose <b>Open</b>, then <b>Open</b> again. macOS asks once because the app isn't notarized by Apple. After that it opens normally.</li>
+      </ol>
+      <p class="note" data-i18n="install.sequoia">macOS 15 or newer and no Open button? Go to System Settings → Privacy &amp; Security, scroll down, and click <b>Open Anyway</b>.</p>
+
+      <h3 class="doc__h3" data-i18n="install.win.h">WINDOWS</h3>
+      <p class="req" data-i18n="install.win.req">Windows 10 or 11, 64-bit</p>
+      <ol class="steps">
+        <li><span data-i18n="install.1">Download</span> <a href="https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-windows.zip"><code>Icy-Tower-Roadster-windows.zip</code></a><span data-i18n="install.w1b">, right-click it and choose Extract All.</span></li>
+        <li data-i18n="install.w2">Open the extracted folder and run the game.</li>
+        <li data-i18n="install.w3">If Windows SmartScreen says "Windows protected your PC", click <b>More info</b>, then <b>Run anyway</b>. It asks because the app isn't code-signed.</li>
+      </ol>
+
+      <h3 class="doc__h3" data-i18n="install.else.h">EVERYTHING ELSE</h3>
+      <div class="other">
+        <p data-i18n="install.other">Linux, Chromebook, iPhone, Android, or a Mac or PC you can't install on: no install needed.</p>
+        <a class="block" href="play/" data-i18n="install.play">[ &#9654; PLAY IN BROWSER ]</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== THE ROADSTER ===================== -->
+  <section class="doc doc--wide" id="roadster" data-floor="40" aria-labelledby="roadster-h">
+    <h2 id="roadster-h" class="doc__h" data-i18n="roadster.h">THE ROADSTER</h2>
+    <p class="doc__meta" data-i18n="roadster.meta">Revealed 15 Oct 2026 · McGregor, Texas · sources below</p>
+    <div class="doc__body">
+      <p data-i18n="roadster.p1">On the evening of 15 October 2026, at SpaceX's rocket test site in McGregor, Texas, Tesla livestreamed the new Roadster doing things cars don't do. It drove up a curved wall, left it upside down and righted itself in mid-air. It hopped over the whole Tesla lineup in a full barrel roll. It ran 0–60 mph in a claimed 0.81 seconds with white jets blasting out of the back. The car was unmanned, and each stunt was a single choreographed run.<sup><a href="#src-1">1</a>,<a href="#src-2">2</a>,<a href="#src-6">6</a></sup></p>
+      <p data-i18n="roadster.p2">The top "Rocket" version carries ten cold-gas nozzles fed by compressed air at about 5,500 psi. Nothing burns. The plume is white vapour that looks pale cyan under stage lights, never flame, which is why the gas in the game is ice-cyan and white.<sup><a href="#src-3">3</a>,<a href="#src-4">4</a></sup></p>
+    </div>
+
+    <figure class="flipstrip" aria-labelledby="flipstrip-cap">
+      <div class="flipstrip__row" role="img" aria-label="The Roadster sprite at eight angles of a backflip: level, nose up, vertical, past vertical, upside down, and back around to level." data-i18n-aria="flipstrip.aria">
+        <span style="--f:0"></span><span style="--f:1"></span><span style="--f:2"></span><span style="--f:3"></span><span style="--f:4"></span><span style="--f:5"></span><span style="--f:6"></span><span style="--f:7"></span>
+      </div>
+      <figcaption id="flipstrip-cap" data-i18n="flipstrip">FIG. 1 — Eight of the 64 pre-rendered flip angles. Original pixel art, drawn for this edition.</figcaption>
+    </figure>
+
+    <h3 class="doc__h3" data-i18n="nozzles.h">TEN NOZZLES, THREE JOBS</h3>
+    <div class="tablewrap">
+      <table class="nozzles">
+        <thead>
+          <tr><th scope="col" data-i18n="t.group">Group</th><th scope="col" data-i18n="t.where">On the real car</th><th scope="col" data-i18n="t.fires">Fires</th><th scope="col" data-i18n="t.game">In the game</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row"><span data-i18n="t.r.name">Rear main</span> <span class="n">×4</span></th><td data-i18n="t.r.where">a row of four in the rear diffuser, below the plate</td><td data-i18n="t.r.fires">straight back</td><td data-i18n="t.r.game">sprint trail; a rev puff while you stand still</td></tr>
+          <tr><th scope="row"><span data-i18n="t.d.name">Lift</span> <span class="n">×4</span></th><td data-i18n="t.d.where">one near each wheel</td><td data-i18n="t.d.fires">straight down</td><td data-i18n="t.d.game">take-off, mid-flip pulses, landing brake</td></tr>
+          <tr><th scope="row"><span data-i18n="t.n.name">Nose lateral</span> <span class="n">×2</span></th><td data-i18n="t.n.where">one in each front fender</td><td data-i18n="t.n.fires">sideways</td><td data-i18n="t.n.game">a small puff toward you as a flip starts and ends</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="doc__h3" data-i18n="fx.h">WHERE THE GAS COMES OUT</h3>
+    <ol class="fx">
+      <li class="fx__item">
+        <img src="assets/img/fx-rev.webp" width="400" height="500" loading="lazy" alt="The Roadster parked on a platform with a small white puff behind it.">
+        <p><b data-i18n="fx.1.h">Idle rev</b> <span data-i18n="fx.1">Standing still, the rear main nozzles puff straight back every 0.6 s.</span></p>
+      </li>
+      <li class="fx__item">
+        <img src="assets/img/fx-launch.webp" width="400" height="500" loading="lazy" alt="The Roadster leaving a platform nose-up, two columns of gas under it and a cloud on the floor.">
+        <p><b data-i18n="fx.2.h">Take-off</b> <span data-i18n="fx.2">Front and rear lift jets fire together, harder for higher jumps, and clouds roll out under the wheels.</span></p>
+      </li>
+      <li class="fx__item">
+        <img src="assets/img/fx-vertical.webp" width="400" height="500" loading="lazy" alt="The Roadster pointing straight up with a long jet trailing below it.">
+        <p><b data-i18n="fx.3.h">Nose up</b> <span data-i18n="fx.3">On a flip jump the front lift jet keeps firing alone for a moment and pushes the nose over.</span></p>
+      </li>
+      <li class="fx__item">
+        <img src="assets/img/fx-inverted.webp" width="400" height="500" loading="lazy" alt="The Roadster upside down in mid-air with a jet pointing upward from its underside.">
+        <p><b data-i18n="fx.4.h">Upside down</b> <span data-i18n="fx.4">The nozzles are fixed to the body, so upside down the "down" jets point up, as in the inverted frames of Tesla's kickflip.</span></p>
+      </li>
+      <li class="fx__item">
+        <img src="assets/img/fx-landing.webp" width="400" height="500" loading="lazy" alt="The Roadster touching down on a platform inside a spreading white cloud.">
+        <p><b data-i18n="fx.5.h">Landing</b> <span data-i18n="fx.5">Both lift jets brake the fall, and the gas splashes sideways off the platform.</span></p>
+      </li>
+    </ol>
+    <p class="note note--wide" data-i18n="liberty">One liberty: the real car rolled around its long axis. From the side a roll just looks like the car showing its roof and then its belly, so in the tower it backflips instead, driven by the same nozzles.</p>
+
+    <h3 class="doc__h3" data-i18n="sources.h">SOURCES</h3>
+    <ol class="sources">
+      <li id="src-1"><a href="https://electrek.co/2026/10/15/tesla-unveils-cyberfied-new-roadster-kickflip/" rel="noopener">Electrek</a>, 15 Oct 2026: <span data-i18n="src.1">the reveal and the kickflip</span></li>
+      <li id="src-2"><a href="https://techcrunch.com/2026/10/15/tesla-reveals-spacex-powered-roadster-that-flies-and-falls-with-style/" rel="noopener">TechCrunch</a>, 15 Oct 2026: <span data-i18n="src.2">variants, thruster count</span></li>
+      <li id="src-3"><a href="https://paultan.org/2026/10/16/tesla-roadster-revealed-flies-on-spacex-air-thrusters-0-96-km-h-in-0-81s-production-2028/" rel="noopener">paultan.org</a>, 16 Oct 2026: <span data-i18n="src.3">nozzle layout, 0.81 s run, telemetry</span></li>
+      <li id="src-4"><a href="https://evxl.co/2026/10/16/tesla-roadster-thrusters-compressed-air-tank/" rel="noopener">EVXL</a>, 16 Oct 2026: <span data-i18n="src.4">compressed-air tanks, rear nozzles</span></li>
+      <li id="src-5"><a href="https://www.youtube.com/watch?v=eqOfmtTJD1A" rel="noopener">Space.com / VideoFromSpace</a>: <span data-i18n="src.5">Tesla's footage, checked frame by frame for the jet positions</span></li>
+      <li id="src-6"><a href="https://www.nbcnews.com/tech/tech-news/elon-musk-shows-flying-tesla-roadster-years-delays-rcna603905" rel="noopener">NBC News</a>: <span data-i18n="src.6">barrel roll, landings in a cloud of condensation</span></li>
+      <li id="src-7"><a href="https://en.wikipedia.org/wiki/Tesla_Roadster_(second_generation)" rel="noopener">Wikipedia</a>: <span data-i18n="src.7">Tesla Roadster (second generation)</span></li>
+    </ol>
+  </section>
+
+  <!-- ===================== CREDITS ===================== -->
+  <section class="credits" id="credits" data-floor="50" aria-labelledby="credits-h">
+    <div class="credits__in">
+      <h2 id="credits-h" class="doc__h" data-i18n="credits.h">CREDITS</h2>
+      <p class="credits__lead"><span data-i18n="credits.lead1">ICY TOWER</span> <span class="credits__c"><bdi dir="ltr">© Johan Peitz / Free Lunch Design</bdi></span></p>
+      <p data-i18n="credits.who">Written, designed and drawn by Johan Peitz. Music and sound effects by Anders Svensson. Icy Tower is freeware.</p>
+      <p><a class="block block--inv" href="https://www.freelunchdesign.com" rel="noopener">[ freelunchdesign.com ]</a></p>
+
+      <blockquote class="quote" cite="https://www.freelunchdesign.com" lang="en" dir="ltr">
+        <p>"Our only requirement is that you give proper credits to Free Lunch Design and provide a link back to our site. However, this game may not be included in a compilation or any other kind of commercial package without the permission from the author."</p>
+        <footer>— Icy Tower 1.3 readme.txt, DISTRIBUTING</footer>
+      </blockquote>
+      <p data-i18n="credits.honour">How this edition honours that: credit and a link on every page, free forever, no ads, no tracking, no donations, never bundled or sold. It is an unofficial fan edition, not made or endorsed by Free Lunch Design. If you are from Free Lunch Design and want anything changed or taken down, <a href="https://github.com/fire17/icy-tower-roadster/issues">open an issue</a> and it will be done.</p>
+
+      <div class="credits__cols">
+        <div>
+          <h3 class="doc__h3" data-i18n="credits.ours.h">THIS EDITION</h3>
+          <p data-i18n="credits.ours">Roadster pixel art, thruster and gas effects, the native Mac, Windows and Web builds, and this site: fire17 &amp; friends (humans and AI agents), 2026.</p>
+          <p data-i18n="credits.license">Our own parts are open: code under MIT, Roadster art and the gameplay video under CC BY 4.0. Everything that comes from Icy Tower (the tower, Harold, music, sounds, fonts, game data) stays © Free Lunch Design and is not covered by those licenses.</p>
+        </div>
+        <div>
+          <h3 class="doc__h3" data-i18n="credits.tm.h">TRADEMARKS</h3>
+          <p data-i18n="credits.tm">Tesla and Roadster are trademarks of Tesla, Inc. SpaceX is a trademark of Space Exploration Technologies Corp. This is an unaffiliated, non-commercial fan project, not sponsored or endorsed by Tesla or SpaceX. The car is drawn from scratch; no Tesla logos or assets are used.</p>
+          <p data-i18n="credits.font">Set in Cousine (SIL Open Font License).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FINAL WORDS ===================== -->
+  <section class="final" data-floor="60" aria-labelledby="final-h">
+    <h2 id="final-h" class="final__h" data-i18n="final.h">The tower is of infinite height. The Roadster will never reach the top.</h2>
+    <p class="final__sub" data-i18n="final.sub">Doesn't mean you shouldn't try.</p>
+    <p class="final__cta">
+      <a class="block block--sel" href="play/" data-i18n="final.play">[ &#9654; PLAY IN BROWSER ]</a>
+      <a class="block" href="https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-mac.zip" data-i18n="final.mac">[ DOWNLOAD FOR MAC ]</a>
+      <a class="block" href="https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-windows.zip" data-i18n="final.win">[ DOWNLOAD FOR WINDOWS ]</a>
+    </p>
+  </section>
+</main>
+
+<footer class="foot">
+  <pre class="foot__rule" aria-hidden="true"></pre>
+  <p>
+    <a href="https://github.com/fire17/icy-tower-roadster" rel="noopener">GitHub</a> ·
+    <a href="https://github.com/fire17/icy-tower-roadster/releases" rel="noopener" data-i18n="foot.releases">Releases</a> ·
+    <a href="https://www.freelunchdesign.com" rel="noopener">Free Lunch Design</a> ·
+    <a href="#top" data-i18n="foot.top">Back to floor 0</a>
+  </p>
+  <p class="foot__disc" data-i18n="disclaimer">Fan recreation — not affiliated with or endorsed by Free Lunch Design. Icy Tower is © Johan Peitz / Free Lunch Design.</p>
+  <p class="foot__end">- The End -</p>
+</footer>
+
+<div class="climb" aria-hidden="true">
+  <div class="climb__track"></div>
+  <div class="climb__car"><span class="climb__sprite"></span></div>
+  <div class="climb__floor"><span class="climb__label">FLOOR</span> <span class="climb__num">000</span></div>
+</div>
+
+<script src="assets/js/site.js?v=7" defer></script>
+</body>
+</html>
