@@ -118,7 +118,7 @@
       <nav class="menu" aria-label="Start">
         <ul>
           <li><a class="menu__item is-on" href="play/"><span data-i18n="menu.play">PLAY IN BROWSER</span><small class="menu__sub" data-i18n="menu.play.sub">any device · Linux, Chromebook, phones · nothing to install</small></a></li>
-          <li><a class="menu__item" href="https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-mac.zip"><span data-i18n="menu.mac">DOWNLOAD FOR MAC</span><small class="menu__sub" data-i18n="menu.mac.sub">Apple Silicon · macOS 13+ · first time: right-click → Open</small></a></li>
+          <li><a class="menu__item" href="https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-mac.dmg"><span data-i18n="menu.mac">DOWNLOAD FOR MAC</span><small class="menu__sub" data-i18n="menu.mac.sub">Apple Silicon · macOS 13+ · signed by Apple, opens normally</small></a></li>
           <li><a class="menu__item" href="https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-windows.zip"><span data-i18n="menu.win">DOWNLOAD FOR WINDOWS</span><small class="menu__sub" data-i18n="menu.win.sub">Windows 10/11 64-bit · SmartScreen: More info → Run anyway</small></a></li>
           <li><a class="menu__item" href="#playing" data-i18n="menu.instructions">INSTRUCTIONS</a></li>
           <li><a class="menu__item" href="#roadster" data-i18n="menu.roadster">THE ROADSTER</a></li>
@@ -252,11 +252,10 @@
       <h3 class="doc__h3 doc__h3--first" data-i18n="install.mac.h">MAC</h3>
       <p class="req" data-i18n="install.mac.req">Apple Silicon (M1 or newer) · macOS 13 Ventura or newer</p>
       <ol class="steps">
-        <li><span data-i18n="install.1">Download</span> <a href="https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-mac.zip"><code>Icy-Tower-Roadster-mac.zip</code></a><span data-i18n="install.1b"> and double-click it to unzip.</span></li>
-        <li data-i18n="install.2">Drag the app into your Applications folder.</li>
-        <li data-i18n="install.3">The first time only: right-click the app (or Control-click), choose <b>Open</b>, then <b>Open</b> again. macOS asks once because the app isn't notarized by Apple. After that it opens normally.</li>
+        <li><span data-i18n="install.1">Download</span> <a href="https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-mac.dmg"><code>Icy-Tower-Roadster-mac.dmg</code></a><span data-i18n="install.1b"> and double-click it to open.</span></li>
+        <li data-i18n="install.2">Drag the app onto the Applications folder in the window that opens.</li>
+        <li data-i18n="install.3">Open it from Applications. It is signed and notarized by Apple, so it opens right away with no extra steps.</li>
       </ol>
-      <p class="note" data-i18n="install.sequoia">macOS 15 or newer and no Open button? Go to System Settings → Privacy &amp; Security, scroll down, and click <b>Open Anyway</b>.</p>
 
       <h3 class="doc__h3" data-i18n="install.win.h">WINDOWS</h3>
       <p class="req" data-i18n="install.win.req">Windows 10 or 11, 64-bit</p>
@@ -378,7 +377,7 @@
     <p class="final__sub" data-i18n="final.sub">Doesn't mean you shouldn't try.</p>
     <p class="final__cta">
       <a class="block block--sel" href="play/" data-i18n="final.play">[ &#9654; PLAY IN BROWSER ]</a>
-      <a class="block" href="https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-mac.zip" data-i18n="final.mac">[ DOWNLOAD FOR MAC ]</a>
+      <a class="block" href="https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-mac.dmg" data-i18n="final.mac">[ DOWNLOAD FOR MAC ]</a>
       <a class="block" href="https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-windows.zip" data-i18n="final.win">[ DOWNLOAD FOR WINDOWS ]</a>
     </p>
   </section>
@@ -391,6 +390,7 @@
     <a href="https://github.com/fire17/icy-tower-roadster" rel="noopener">GitHub</a> ·
     <a href="https://github.com/fire17/icy-tower-roadster/releases" rel="noopener" data-i18n="foot.releases">Releases</a> ·
     <a href="https://www.freelunchdesign.com" rel="noopener">Free Lunch Design</a> ·
+    <a href="/credits.html">תודות / Credits</a> ·
     <a href="#top" data-i18n="foot.top">Back to floor 0</a>
   </p>
   <p class="foot__disc" data-i18n="disclaimer">Fan recreation — not affiliated with or endorsed by Free Lunch Design. Icy Tower is © Johan Peitz / Free Lunch Design.</p>
@@ -408,6 +408,6 @@
   <div class="climb__floor"><span class="climb__label">FLOOR</span> <span class="climb__num">000</span></div>
 </div>
 
-<script src="assets/js/site.js?v=24" defer></script>
+<script src="assets/js/site.js?v=25" defer></script>
 </body>
 </html>

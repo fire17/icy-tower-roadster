@@ -3,7 +3,7 @@
 <a href="https://icytower.akeyo.io"><img src="assets/readme/banner.svg" width="100%" alt="Icy Tower: Roadster Edition — a pixel-art Roadster flips up a brick tower on jets of cold gas"></a>
 
 [![Play in browser](https://img.shields.io/badge/play-in%20your%20browser-bfe9f5?labelColor=13142a)](https://icytower.akeyo.io/play/)
-[![Download for Mac](https://img.shields.io/badge/download-macOS%2013%2B%20%C2%B7%20Apple%20Silicon-e9eef6?labelColor=13142a)](https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-mac.zip)
+[![Download for Mac](https://img.shields.io/badge/download-macOS%2013%2B%20%C2%B7%20Apple%20Silicon-e9eef6?labelColor=13142a)](https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-mac.dmg)
 [![Download for Windows](https://img.shields.io/badge/download-Windows%2010%2F11%20%C2%B7%2064--bit-e9eef6?labelColor=13142a)](https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-windows.zip)
 [![Replays](https://img.shields.io/badge/original%20replays-16%2F16%20%C2%B7%20Mac%20%3D%20Windows%20%3D%20Web-bfe9f5?labelColor=13142a)](#-11-faithful-the-original-game-not-a-lookalike)
 [![Release](https://img.shields.io/github/v/release/fire17/icy-tower-roadster?color=ff4040&labelColor=13142a)](https://github.com/fire17/icy-tower-roadster/releases)
@@ -43,7 +43,7 @@ Tesla showed the flying Roadster on **15 October 2026**. Within three days it wa
 | You're on | Do this |
 |---|---|
 | **Anything with a browser** (Linux, Chromebook, iPhone, Android, any PC) | Open **<https://icytower.akeyo.io/play/>** and play. |
-| **Mac** (Apple Silicon, macOS 13+) | Download [`Icy-Tower-Roadster-mac.zip`](https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-mac.zip) → unzip → drag to Applications → first time only: **right-click → Open → Open**. |
+| **Mac** (Apple Silicon, macOS 13+) | Download [`Icy-Tower-Roadster-mac.dmg`](https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-mac.dmg) → open it → drag the app onto Applications. Signed and notarized by Apple: it opens with no extra steps. Includes all 115 characters and their sounds. |
 | **Windows** 10/11 64-bit | Download [`Icy-Tower-Roadster-windows.zip`](https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-windows.zip) → right-click → Extract All → run. SmartScreen: **More info → Run anyway**. |
 
 > [!NOTE]
