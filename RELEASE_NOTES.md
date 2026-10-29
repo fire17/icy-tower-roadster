@@ -29,14 +29,15 @@ Windows asks once because the app is not code-signed. The Mac DMG is signed and 
   - Web: 16/16, tick for tick.
   - All three: 145,141 per-tick full-state hashes, identical on Mac, Windows and Web (combined chain `ce0ab7382a9dd329`).
 - **116 climbers in the Mac and Windows downloads:** the Roadster (the default), Harold, Disco Dave, the Template and 112 fan-made community characters with their sounds (makers and sources: https://icytower.akeyo.io/credits.html). Press C to switch. Every new game starts on the classic ice floors.
+- **In-game Credits screen** (main menu, above Exit) in the Mac, Windows and web builds: Johan Peitz / Free Lunch Design, music by Anders Svensson, the Roadster team, and every community character maker. Any key returns to the menu.
 - **Same keys as 2001:** ← → run, Space jump, Esc pause, R restart, M mute.
 
 ## Checksums (sha256)
 
 ```
-57d746c7e9fadfc1ab541f81333b1d16480ec2d91da487393d8424640c6428ee  Icy-Tower-Roadster-mac.dmg
+61ab8bea8bcfebfb9827b02d5ba931a39cd68a0ff0c4e703379cc6470aa408ba  Icy-Tower-Roadster-mac.dmg
 53d4f432c336d764885570ef78c4c3aca20f28fb90631288e26b844d5dbc1b96  Icy-Tower-Roadster-mac.zip
-a6b39858e2f8dfbab09c6c89d82921e566aaa4239da56cc73876fab77367abc1  Icy-Tower-Roadster-windows.zip
+b206bff7a428242d16ab7b56b2c26bba95ec70b5eb6e60ebe78d5a04dbcc22bf  Icy-Tower-Roadster-windows.zip
 ```
 
 ## Credits

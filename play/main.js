@@ -435,7 +435,7 @@
     return b;
   }
   function buildPads(screen) {
-    const name = screen === 1 ? 'play' : screen === 2 ? 'pause' : screen === 3 ? 'info' : 'menu';
+    const name = screen === 1 ? 'play' : screen === 2 ? 'pause' : (screen === 3 || screen === 5) ? 'info' : 'menu';
     if (padLayout === name + layoutKey) return;
     padLayout = name + layoutKey;
     const L = $('pad-left'), R = $('pad-right'); L.innerHTML = ''; R.innerHTML = '';
