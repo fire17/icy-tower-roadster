@@ -102,7 +102,7 @@
     // ffmpeg) return the sound from sample 0 plus < 1024 frames of end
     // padding; one that ignores it returns >= want + 2112 frames with the
     // priming in front. Only then cut it. The Ogg streams decode sample-exact.
-    const priming = Math.round(2112 * RATE / (s.rate || RATE));
+    const priming = Math.round(2112 * RATE / (s.arate || s.rate || RATE)); // arate: the rate the m4a was encoded at
     const start = aac && len - want >= priming ? priming : 0;
     const chans = []; for (let c = 0; c < buf.numberOfChannels; c++) chans.push(buf.getChannelData(c));
     const out = new Int16Array(want * ch);
@@ -144,6 +144,63 @@
       heap.set(e.data, ptr + off); off += e.data.length;
     });
     return { ptr, size: total };
+  }
+
+  // ------------------------------------------------------------ lazy character sounds
+  // index.json entries with a "char" id (every community pack) are not decoded at
+  // boot: when the host selects that character (C, the menu, a replay) its cues are
+  // fetched, decoded and handed to it_host_set_character_sound, and the next two
+  // characters are prefetched so cycling with C is usually instant. Decoded PCM
+  // lives in wasm memory; past LAZY_BYTES the least recently used characters
+  // (never the loaded one or the one before it) are detached and freed.
+  const LAZY_BYTES = 96 << 20;
+  const lazy = { ids: [], byChar: new Map(), ready: new Map(), pending: new Map(), lru: [], bytes: 0, last: -1, prev: -1, log: [] };
+  function lazyInit(index) {
+    for (const s of index) if (s.char) { if (!lazy.byChar.has(s.char)) lazy.byChar.set(s.char, []); lazy.byChar.get(s.char).push(s); }
+    const n = M._web_char_count();
+    for (let i = 0; i < n; i++) lazy.ids.push(M.UTF8ToString(M._web_char_id(i)));
+  }
+  function lazyLoad(i) {
+    const list = lazy.byChar.get(lazy.ids[i]);
+    if (!list || lazy.ready.has(i)) return Promise.resolve();
+    if (lazy.pending.has(i)) return lazy.pending.get(i);
+    const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+    if (!OAC) return Promise.resolve();
+    const t0 = performance.now(), dctx = new OAC(2, RATE, RATE);
+    const p = Promise.all(list.map((s) => decodeSound(dctx, s).then((pcm) => ({ s, pcm })))).then((got) => {
+      const slots = []; let peak = 0;
+      for (const { s, pcm } of got) {
+        const slot = Number(s.name.slice(s.name.lastIndexOf('/s') + 2)) - 100;
+        const ptr = M._web_alloc(pcm.byteLength);
+        M.HEAPU8.set(new Uint8Array(pcm.buffer, pcm.byteOffset, pcm.byteLength), ptr);
+        const rc = M._web_set_char_sound(i, slot, RATE, s.channels, ptr, pcm.length / s.channels);
+        if (rc !== 0) { M._web_free(ptr); continue; }
+        for (let k = 0; k < pcm.length; k++) { const v = pcm[k] < 0 ? -pcm[k] : pcm[k]; if (v > peak) peak = v; }
+        slots.push({ slot, ptr, bytes: pcm.byteLength }); lazy.bytes += pcm.byteLength;
+      }
+      lazy.pending.delete(i); lazy.ready.set(i, slots); lazy.lru.push(i);
+      lazy.log.push({ index: i, id: lazy.ids[i], sounds: slots.length, peak, bytes: slots.reduce((a, x) => a + x.bytes, 0), ms: Math.round(performance.now() - t0) });
+      if (lazy.log.length > 200) lazy.log.shift();
+      lazyEvict();
+    });
+    lazy.pending.set(i, p);
+    return p;
+  }
+  function lazyEvict() {
+    for (let k = 0; lazy.bytes > LAZY_BYTES && k < lazy.lru.length;) {
+      const j = lazy.lru[k];
+      if (j === lazy.last || j === lazy.prev) { k++; continue; }
+      for (const x of lazy.ready.get(j)) { M._web_set_char_sound(j, x.slot, 0, 0, 0, 0); M._web_free(x.ptr); lazy.bytes -= x.bytes; }
+      lazy.ready.delete(j); lazy.lru.splice(k, 1);
+    }
+  }
+  function lazyTick() {
+    const i = M._web_loaded_char();
+    if (i === lazy.last || i < 0) return;
+    lazy.prev = lazy.last; lazy.last = i;
+    const at = lazy.lru.indexOf(i); if (at >= 0) { lazy.lru.splice(at, 1); lazy.lru.push(i); }
+    const n = lazy.ids.length;
+    lazyLoad(i).then(() => lazyLoad((i + 1) % n)).then(() => lazyLoad((i + 2) % n)).catch((e) => console.warn('character sounds', e));
   }
 
   // ------------------------------------------------------------ platform hooks (called from C)
@@ -734,6 +791,8 @@ registerProcessor('icy-mixer-out', IcyMixerOut);`;
   window.__icy = { stats, get screen() { return M ? M._web_screen() : -1; }, get dest() { return dest; },
                    get audio() { return { state: audio.ctx ? audio.ctx.state : 'none', unlocked: audio.unlocked, mode: audio.mode, sent: audio.sent, rate: audio.ctx ? audio.ctx.sampleRate : 0 }; },
                    get renderer() { return gl ? 'webgl' : '2d'; },
+                   get chars() { return M ? { count: lazy.ids.length, loaded: M._web_loaded_char(), id: lazy.ids[M._web_loaded_char()], ready: [...lazy.ready.keys()],
+                                              pending: [...lazy.pending.keys()], bytes: lazy.bytes, log: lazy.log } : null; },
                    // Verification aid: the exact frame the C host produced, as a PNG data URL.
                    snapshot() {
                      const ptr = M._web_frame(), w = M._web_frame_width(), h = M._web_frame_height();
@@ -753,6 +812,7 @@ registerProcessor('icy-mixer-out', IcyMixerOut);`;
     // ticks and input sampling but spreads them evenly over the vsyncs.
     stats.steps++;
     if (M._web_step(now)) { dirty = true; stats.redraws++; stats.stepTimes.push(now); if (stats.stepTimes.length > 600) stats.stepTimes.shift(); }
+    lazyTick();
     feedAudio();
     const screen = M._web_screen();
     if (screen !== lastScreen) {
@@ -776,17 +836,19 @@ registerProcessor('icy-mixer-out', IcyMixerOut);`;
       setProgress(0.4, 'Tuning the thrusters…');
       const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
       let sounds = [];
+      const eager = index.filter((s) => !s.char);   // world + the original four characters
       if (OAC) {
         const dctx = new OAC(2, RATE, RATE);
         let done = 0;
-        sounds = await Promise.all(index.map(async (s) => {
-          const pcm = await decodeSound(dctx, s); done++; setProgress(0.4 + 0.5 * done / index.length);
+        sounds = await Promise.all(eager.map(async (s) => {
+          const pcm = await decodeSound(dctx, s); done++; setProgress(0.4 + 0.5 * done / eager.length);
           return { name: s.name, channels: s.channels, pcm };
         }));
       }
       const pak = buildPak(base, sounds);
       const seed = (crypto && crypto.getRandomValues) ? crypto.getRandomValues(new Uint32Array(1))[0] : (Date.now() >>> 0);
       if (M._web_init(pak.ptr, pak.size, seed) !== 0) throw new Error('The game data could not be opened.');
+      lazyInit(index);
       if (store.get(PREFIX + 'muted') === '1') M._web_set_muted(1);
       syncMute();
       setProgress(1, 'Ready');
