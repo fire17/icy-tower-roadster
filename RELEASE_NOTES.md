@@ -14,11 +14,11 @@ A free, non-commercial fan edition of **Icy Tower 1.3 © Johan Peitz / Free Lunc
 
 | File | For | First launch |
 |---|---|---|
-| `Icy-Tower-Roadster-mac.dmg` (110 MB) | Mac with Apple Silicon (M1 or newer), macOS 13 Ventura or newer | Open the DMG, drag the app onto Applications. Developer ID signed and notarized by Apple, so it opens with no extra steps. All 115 characters and their sounds. |
+| `Icy-Tower-Roadster-mac.dmg` (110 MB) | Mac with Apple Silicon (M1 or newer), macOS 13 Ventura or newer | Open the DMG, drag the app onto Applications. Developer ID signed and notarized by Apple, so it opens with no extra steps. All 116 characters and their sounds. |
 | `Icy-Tower-Roadster-mac.zip` (11.1 MB) | Mac with Apple Silicon (M1 or newer), macOS 13 Ventura or newer | Older 4-character build. Unzip, drag to Applications, then right-click the app → **Open** → **Open**. On macOS 15 or newer, if there's no Open button: System Settings → Privacy & Security → **Open Anyway**. |
-| `Icy-Tower-Roadster-windows.zip` (13.5 MB) | Windows 10 or 11, 64-bit | Right-click → Extract All, run the game. If SmartScreen says "Windows protected your PC": **More info** → **Run anyway**. |
+| `Icy-Tower-Roadster-windows.zip` (205 MB) | Windows 10 or 11, 64-bit | Right-click → Extract All, run the game. All 116 characters and their sounds. If SmartScreen says "Windows protected your PC": **More info** → **Run anyway**. |
 
-macOS and Windows ask once because the apps are not notarized or code-signed. That costs money, and this project takes none.
+Windows asks once because the app is not code-signed. The Mac DMG is signed and notarized by Apple and opens with no warning.
 
 ## What's in it
 
@@ -28,7 +28,7 @@ macOS and Windows ask once because the apps are not notarized or code-signed. Th
   - Windows: 16/16, tick for tick.
   - Web: 16/16, tick for tick.
   - All three: 145,141 per-tick full-state hashes, identical on Mac, Windows and Web (combined chain `ce0ab7382a9dd329`).
-- **Four climbers:** the Roadster (the default), Harold, Disco Dave and the Template. Press C to switch. Every new game starts on the classic ice floors.
+- **116 climbers in the Mac and Windows downloads:** the Roadster (the default), Harold, Disco Dave, the Template and 112 fan-made community characters with their sounds (makers and sources: https://icytower.akeyo.io/credits.html). Press C to switch. Every new game starts on the classic ice floors.
 - **Same keys as 2001:** ← → run, Space jump, Esc pause, R restart, M mute.
 
 ## Checksums (sha256)
@@ -36,7 +36,7 @@ macOS and Windows ask once because the apps are not notarized or code-signed. Th
 ```
 57d746c7e9fadfc1ab541f81333b1d16480ec2d91da487393d8424640c6428ee  Icy-Tower-Roadster-mac.dmg
 53d4f432c336d764885570ef78c4c3aca20f28fb90631288e26b844d5dbc1b96  Icy-Tower-Roadster-mac.zip
-6b6c8ef94b2b4c6e7acc4840174499f9d866d601682120f316efa9b9a5564bc2  Icy-Tower-Roadster-windows.zip
+a6b39858e2f8dfbab09c6c89d82921e566aaa4239da56cc73876fab77367abc1  Icy-Tower-Roadster-windows.zip
 ```
 
 ## Credits

@@ -43,8 +43,8 @@ Tesla showed the flying Roadster on **15 October 2026**. Within three days it wa
 | You're on | Do this |
 |---|---|
 | **Anything with a browser** (Linux, Chromebook, iPhone, Android, any PC) | Open **<https://icytower.akeyo.io/play/>** and play. |
-| **Mac** (Apple Silicon, macOS 13+) | Download [`Icy-Tower-Roadster-mac.dmg`](https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-mac.dmg) → open it → drag the app onto Applications. Signed and notarized by Apple: it opens with no extra steps. Includes all 115 characters and their sounds. |
-| **Windows** 10/11 64-bit | Download [`Icy-Tower-Roadster-windows.zip`](https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-windows.zip) → right-click → Extract All → run. SmartScreen: **More info → Run anyway**. |
+| **Mac** (Apple Silicon, macOS 13+) | Download [`Icy-Tower-Roadster-mac.dmg`](https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-mac.dmg) → open it → drag the app onto Applications. Signed and notarized by Apple: it opens with no extra steps. Includes all 116 characters and their sounds. |
+| **Windows** 10/11 64-bit | Download [`Icy-Tower-Roadster-windows.zip`](https://github.com/fire17/icy-tower-roadster/releases/latest/download/Icy-Tower-Roadster-windows.zip) → right-click → Extract All → run. SmartScreen: **More info → Run anyway**. Includes all 116 characters and their sounds. |
 
 > [!NOTE]
 > On **macOS 15 or newer**, right-click → Open may not show an Open button. Go to **System Settings → Privacy & Security**, scroll down, and click **Open Anyway**. macOS and Windows ask once because the apps aren't notarized or code-signed; that costs money, and this project takes none.
